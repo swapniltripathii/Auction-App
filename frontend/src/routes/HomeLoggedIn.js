@@ -1,7 +1,7 @@
 import React from "react";
 import NavbarTop from "../components/shared/NavbarTop";
 import { useAuth } from "../contexts/authContext/authcontext"; // Import useAuth to access the context
-
+import Apparels from "../components/categories/Apparels";
 const HomeLoggedIn = () => {
   const { currentUser } = useAuth(); // Destructure currentUser from the auth context
 
@@ -13,10 +13,13 @@ const HomeLoggedIn = () => {
       </div>
 
       {/* Home content */}
-      <div className="w-full bg-green-400 p-4">
+      <div className="w-full  p-4">
         {/* Content for logged-in users */}
         <h1 className="text-white text-2xl">Welcome, {currentUser?.email || 'User'}!</h1>
         {/* You can add more content here */}
+        <div>
+          <Apparels/>
+        </div>
       </div>
     </div>
   );

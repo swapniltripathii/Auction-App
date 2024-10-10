@@ -6,7 +6,7 @@ const Apparels = () => {
   const apparelProducts = products.apparels; // Get only apparels
 
   return (
-    <div className="flex product-container">
+    <div className="flex flex-wrap product-container">
       {apparelProducts.map((product) => (
         <Card key={product.id} product={product} />
       ))}
