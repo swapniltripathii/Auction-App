@@ -1,6 +1,6 @@
 import React from "react";
 import NavbarTop from "../components/shared/NavbarTop";
-
+import Apparels from "../components/categories/Apparels";
 const Home = () => {
   return (
     <div className="w-full h-full  ">
@@ -9,10 +9,16 @@ const Home = () => {
         <NavbarTop />
       </div>
       {/* this div is for home components */}
+      
       <div className="w-full  bg-green-400">
-        
+           
       </div>
+
+      <div>
+        <Apparels/>
+        </div>      
     </div>
+
   );
 };
 
