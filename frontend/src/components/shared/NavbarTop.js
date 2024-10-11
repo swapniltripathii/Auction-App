@@ -1,22 +1,31 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import "./NavbarBottom.css"; // Import your custom CSS file if you create one
-import appLogo from '../../assets/images/applogo.png';
-import { useAuth } from "../../contexts/authContext/authcontext"; // Correct path to authcontext
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
+import "./NavbarBottom.css";
+import logo from "../../assets/images/logo.png";
+import { useAuth } from "../../contexts/authContext/authcontext";
+
 
 const NavbarTop = () => {
-  const { userLoggedIn, handleLogout } = useAuth(); // Use the auth context
+  const { userLoggedIn, handleLogout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogoutClick = async () => {
+    try {
+      await handleLogout();
+      navigate("/"); 
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
 
   return (
     <div>
       {/* Top Navbar */}
-      <div className="fixed w-screen flex justify-between items-center h-24 p-8 shadow-md z-10 border-b bg-white">
+      <div className="fixed w-screen flex justify-between items-center h-24 p-8 bg-yellow-200 shadow-md z-10 border-b bg-white">
         <div className="flex items-center">
-          <img
-            src={appLogo}
-            alt="BidRare Logo"
-            className="h-24 w-50"
-          />
+          <Link to="/home">
+            <img src={logo} alt="BidRare Logo" className="h-24 w-50" />
+          </Link>
         </div>
         <div className="flex-grow py-6 px-12 ml-2 mr-4">
           <input
@@ -46,7 +55,7 @@ const NavbarTop = () => {
                 Profile
               </Link>
               <button
-                onClick={handleLogout}
+                onClick={handleLogoutClick} // Use the updated logout handler
                 className="px-4 py-2 bg-white text-black border border-black hover:bg-black transition duration-300 hover:text-white font-medium rounded-3xl"
               >
                 Logout
@@ -71,11 +80,11 @@ const NavbarTop = () => {
         </div>
       </div>
 
-      <div className="fixed top-24 flex w-full justify-center items-center p-2 bg-gray-100 border-t border-b border-gray-300">
+      <div className="fixed top-24 flex w-full justify-center items-center p-2 bg-gray-400 border-t border-b border-gray-300">
         <Link to="/apparels" className="nav-link">
           Apparels
         </Link>
-        <Link to="/sneakers" className="nav-link">
+        <Link to="/shoes" className="nav-link">
           Sneakers
         </Link>
         <Link to="/collectibles" className="nav-link">

@@ -1,24 +1,57 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import "./output.css"; // Make sure Tailwind is imported here
+import "./output.css"; // Tailwind import
 import Login from "./routes/Login";
 import Signup from "./routes/Signup";
-import Home from "./routes/Home";
-import Sell from "../src/routes/Pages/Sell";
-import { AuthProvider } from "./contexts/authContext/authcontext";
 import HomeLoggedIn from "./routes/HomeLoggedIn";
+import Home from "./routes/Home";
+import Sell from "./routes/Pages/Sell";
+import { AuthProvider } from "./contexts/authContext/authcontext";
+import PrivateRoute from "./components/PrivateRoute"; // Import the PrivateRoute component
+import Shoes from "./routes/Shoes";
+import Collections from "./routes/Collections";
+import Clothes from "./routes/Clothes";
 
 function App() {
   return (
     <div className="w-screen h-screen font-poppins overflow-x-hidden overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-300">
+      {/* Wrap everything in the AuthProvider */}
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" exact element={<Home />} />
-            <Route path="/home" exact element={<HomeLoggedIn />} />
+            {/* Public Routes */}
+            <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/sell" element={<Sell />} />
+            <Route path="/shoes" element={<Shoes/>} />
+            <Route path="/apparels" element={<Clothes/>} />
+            <Route path="/collectibles" element={<Collections/>} />
+
+            {/* Protected Routes */}
+            <Route
+              path="/home"
+              element={
+                <PrivateRoute>
+                  <HomeLoggedIn />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/sell"
+              element={
+                <PrivateRoute>
+                  <Sell />
+                </PrivateRoute>
+              }
+            />
+            {/* <Route
+              path="/shoes"
+              element={
+                <PrivateRoute>
+                  <Shoes />
+                </PrivateRoute>
+              }
+            /> */}
           </Routes>
         </BrowserRouter>
       </AuthProvider>
