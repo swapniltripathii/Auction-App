@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const authRoutes = require("./routes/auth"); // Import auth routes
 require("dotenv").config();
 
-app.use(cors());  // Add this line to enable CORS for all origins
+app.use(cors()); // Add this line to enable CORS for all origins
 app.use(express.json()); // Parse JSON requests
 
 // MongoDB connection
@@ -21,6 +21,7 @@ mongoose
 
 // Use the auth routes for managing listings
 app.use("/api/auth", authRoutes);
+app.use('/uploads', express.static('uploads'));
 
 app.listen(port, () => {
   console.log("App is running on port " + port);

@@ -19,48 +19,57 @@ export default function Sell() {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImage(URL.createObjectURL(file));
+      setImage(file); // Store the actual file, not the URL
     }
   };
+  
 
   // Function to handle form submission and API request
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    // Assuming you have the user's ID from your auth context or state
     const userId = "USER_ID_HERE"; // Replace this with the actual user ID from your auth state
   
-    const newListing = {
-      userId, // Set this dynamically from the logged-in user
-      productName,
-      description,
-      image,
-      category,
-      price,
-    };
+    // Create form data to handle file uploads
+    const formData = new FormData();
+    formData.append("userId", userId);
+    formData.append("productName", productName);
+    formData.append("description", description);
+    formData.append("category", category);
+    formData.append("price", price);
+  
+    // Append the file itself
+    if (image) {
+      formData.append("image", image); // Add file object, not the URL
+    }
   
     try {
       const response = await axios.post(
         "http://localhost:8000/api/auth/add-listing",
-        newListing
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
   
       console.log("New listing created", response.data);
       setListings([...listings, response.data]);
   
+      // Reset form fields
       setProductName("");
       setDescription("");
       setImage(null);
       setCategory("shoes");
       setPrice("");
-      setActiveTab("currentListing"); // Switch to current listings
+      setActiveTab("currentListing");
     } catch (error) {
       console.error("Error creating listing:", error);
     }
   };
   
   
-
   return (
     <div className="container mx-auto p-4">
       {/* Tabs Section */}

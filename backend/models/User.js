@@ -1,32 +1,33 @@
 const mongoose = require("mongoose");
 
-const User = new mongoose.Schema({
-  firstName: {
-    type: String,
-    required: true,
+const UserSchema = new mongoose.Schema(
+  {
+    firstName: {
+      type: String,
+      required: true,
+    },
+    lastName: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true, // Ensure email is unique
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    listings: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Listing", // Refers to the Listing model
+      },
+    ],
   },
-  password: {
-    type: String,
-    required: true,
-    private: true,
-  },
-  lastName: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true, // Ensure email is unique
-  },
-  username: {
-    type: String,
-    required: true,
-    unique: true, // Ensure username is unique
-  },
-  listings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }] // Array to hold references to products
-}, { timestamps: true });
+  { timestamps: true }
+);
 
-const UserModel = mongoose.model("User", User);
-
+const UserModel = mongoose.model("User", UserSchema);
 module.exports = UserModel;

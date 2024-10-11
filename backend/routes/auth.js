@@ -1,32 +1,37 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require("mongoose");
-const Product = require("../models/Product"); // Assuming you have a product model
+const User = require("../models/User"); // Import User model
+const bcrypt = require("bcryptjs");
 
-// Route to add a new listing
-router.post("/add-listing", async (req, res) => {
+// Signup Route - to create a new user
+router.post("/signup", async (req, res) => {
+  const { firstName, lastName, email, password } = req.body;
+
   try {
-    const { userId, productName, description, image, category, price } = req.body;
-
-    // Ensure userId is a valid ObjectId before proceeding
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({ message: "Invalid user ID" });
+    // Check if the user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
     }
 
-    const newProduct = new Product({
-      userId: mongoose.Types.ObjectId(userId), // Convert to ObjectId
-      productName,
-      description,
-      image,
-      category,
-      price,
+    // Hash the password before saving it
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create a new user
+    const newUser = new User({
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword, // Save the hashed password
     });
 
-    await newProduct.save();
-    return res.status(201).json(newProduct);
-  } catch (err) {
-    console.error("Error saving new product:", err);
-    return res.status(500).json({ message: "Error creating listing" });
+    // Save the user to the database
+    const savedUser = await newUser.save();
+
+    res.status(201).json(savedUser);
+  } catch (error) {
+    console.error("Error creating user:", error);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
