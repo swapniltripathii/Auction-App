@@ -2,6 +2,8 @@ import React from "react";
 import NavbarTop from "../components/shared/NavbarTop";
 import { useAuth } from "../contexts/authContext/authcontext"; // Import useAuth to access the context
 import Apparels from "../components/categories/Apparels";
+import Collectibles from "../components/categories/Collectibles";
+import Sneakers from "../components/categories/Sneakers";
 const HomeLoggedIn = () => {
   const { currentUser } = useAuth(); // Destructure currentUser from the auth context
 
@@ -19,6 +21,8 @@ const HomeLoggedIn = () => {
         {/* You can add more content here */}
         <div>
           <Apparels/>
+          <Collectibles/>
+          <Sneakers/>
         </div>
       </div>
     </div>
