@@ -11,6 +11,7 @@ import PrivateRoute from "./components/PrivateRoute"; // Import the PrivateRoute
 import Shoes from "./routes/Shoes";
 import Collections from "./routes/Collections";
 import Clothes from "./routes/Clothes";
+import Profile from "./routes/Profile";
 
 function App() {
   return (
@@ -44,14 +45,14 @@ function App() {
                 </PrivateRoute>
               }
             />
-            {/* <Route
-              path="/shoes"
+            <Route
+              path="/profile"
               element={
                 <PrivateRoute>
-                  <Shoes />
+                  <Profile />
                 </PrivateRoute>
               }
-            /> */}
+            />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

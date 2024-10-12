@@ -11,11 +11,10 @@ import "../components/shared/NavbarBottom.css";
 const Home = () => {
   return (
     <div className="w-full h-full">
-      {/* Top Navbar */}
+      {/* Navbar */}
       <div className="w-full">
         <div className="fixed w-screen flex justify-between items-center h-24 p-8 shadow-md z-10 border-b bg-pink-200">
           <div className="flex items-center">
-            {/* Logo link to home */}
             <Link to="/">
               <img
                 src={logo}
@@ -74,8 +73,7 @@ const Home = () => {
 
         {/* Home Content */}
         <div className="p-4 mt-0 bg-blue-200">
-          {/* Added mt-32 to account for fixed navbar */}
-          <div className="mt-36 pl-10 pr-10">
+          <div className="mt-36 pl-8 pr-8">
             <Apparels />
             <div className="my-4 flex justify-center rounded-2xl">
               <img

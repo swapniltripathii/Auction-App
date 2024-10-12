@@ -12,13 +12,12 @@ const Clothes = () => {
       <div className="w-full h-32">
         <NavbarTop />
       </div>
-
       {/* Home content */}
-      <div className="w-full p-4 ">
+      <div className=" w-full p-4 bg-gray-200 ">
         <h1 className="text-black text-2xl">
           Welcome, {currentUser?.email || "User"}!
         </h1>
-        <div>
+        <div className="pl-8 pr-8">
           <Apparels/>
         </div>
       </div>

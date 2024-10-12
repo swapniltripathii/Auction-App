@@ -36,13 +36,13 @@ const HomeLoggedIn = () => {
       </div>
 
       {/* Home content */}
-      <div className="w-full p-4 bg-gray-600">
+      <div className="w-full p-4 bg-gray-100">
         <h1 className="text-black text-2xl">
           Welcome, {currentUser?.email || "User"}!
         </h1>
 
         {/* Product Listings Grid */}
-        <div>
+        <div className="pl-8 pr-8">
           <Apparels />
           {/* Local Image */}
           <div className="my-4 flex justify-center rounded-2xl">
