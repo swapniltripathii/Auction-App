@@ -5,8 +5,8 @@ import Apparels from "../components/categories/Apparels";
 import Collectibles from "../components/categories/Collectibles";
 import Sneakers from "../components/categories/Sneakers";
 import axios from "axios";
-import localImage from "../assets/images/banner1.webp"; // Import the local image
-import localImage2 from "../assets/images/banner2.webp";
+// import localImage from "../assets/images/banner1.webp"; // Import the local image
+// import localImage2 from "../assets/images/banner2.webp";
 import SliderCard from "../components/SliderCard";
 import Footer from "../components/Footer";
 const HomeLoggedIn = () => {

@@ -3,17 +3,14 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules"; 
 import "swiper/css";
 import "swiper/css/pagination";
-// // Import Swiper components
-// import { Swiper, SwiperSlide } from 'swiper/react';
-// // Import Swiper modules
-// import { Pagination } from 'swiper/modules';
-// // Import Swiper styles
-// import 'swiper/css';
-// import 'swiper/css/pagination';
+
+import banner1 from "../assets/images/banner1.jpg"; // Adjust the path as necessary
+import banner2 from '../assets/images/banner2.jpeg'
+import banner3 from '../assets/images/banner3.png'
 
 const SliderCard = () => {
   return (
-    <div className="w-full relative mt-24"> {/* Margin to create space below the navbar */}
+    <div className="relative mt-24 mr-20 ml-20 mx-auto"> {/* Adjust the width here */} 
       <Swiper
         modules={[Pagination, Autoplay]} 
         pagination={{ clickable: true, el: ".swiper-pagination" }}
@@ -23,27 +20,33 @@ const SliderCard = () => {
         autoplay={{ delay: 3000, disableOnInteraction: false }} 
       >
         <SwiperSlide>
-          <div className="bg-indigo-50 rounded-2xl h-96 flex justify-center items-center">
-            <span className="text-3xl font-semibold text-indigo-600">
-              Slide 1
-            </span>
+          <div className="bg-indigo-50 rounded-2xl h-96 w-full flex justify-center items-center">
+          <img 
+              className="object-cover w-full h-full rounded-2xl" 
+              src={banner2} 
+              alt="Slide 2" 
+            />
           </div>
         </SwiperSlide>
         <SwiperSlide>
-          <div className="bg-indigo-50 rounded-2xl h-96 flex justify-center items-center">
-           
-              <img  className="fit" src="https://i.pinimg.com/enabled_hi/564x/34/1e/08/341e0853bf746c5d1f91589c77176bae.jpg" alt="" />
-            
+          <div className="bg-indigo-50 rounded-2xl h-96 w-full flex justify-center items-center">
+            <img 
+              className="object-cover w-full h-full rounded-2xl" 
+              src={banner1} 
+              alt="Slide 2" 
+            />
           </div>
         </SwiperSlide>
         <SwiperSlide>
-          <div className="bg-indigo-50 rounded-2xl h-96 flex justify-center items-center">
-            <span className="text-3xl font-semibold text-indigo-600">
-              Slide 3
-            </span>
+          <div className="bg-indigo-50 rounded-2xl h-96 w-full flex justify-center items-center">
+          <img 
+              className="object-cover w-full h-full b-25 rounded-2xl" 
+              src={banner3} 
+              alt="Slide 3" 
+            />
           </div>
         </SwiperSlide>
-        <div className="swiper-pagination !bottom-2 !top-auto !w-80 right-0 mx-auto bg-gray-100"></div>
+        <div className="swiper-pagination !bottom-2 !top-auto !w-80 right-0 mx-auto bg-gray-30"></div>
       </Swiper>
     </div>
   );
