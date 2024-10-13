@@ -12,8 +12,11 @@ import Shoes from "./routes/Shoes";
 import Collections from "./routes/Collections";
 import Clothes from "./routes/Clothes";
 import Profile from "./routes/Profile";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 import ProfileLayout from "./components/ProfileLayouts";
+import Selling from "./routes/Pages/Selling";
+import Buying from "./routes/Pages/Buying";
+import Favourite from "./routes/Pages/Favourite";
 
 function App() {
   return (
@@ -27,10 +30,10 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/shoes" element={<Shoes/>} />
-            <Route path="/apparels" element={<Clothes/>} />
-            <Route path="/collectibles" element={<Collections/>} />
-            <Route path="/profilelayouts" element={<ProfileLayout/>}/>
+            <Route path="/shoes" element={<Shoes />} />
+            <Route path="/apparels" element={<Clothes />} />
+            <Route path="/collectibles" element={<Collections />} />
+            <Route path="/profilelayouts" element={<ProfileLayout />} />
             {/* <Route path="/demo" element={<Buy/>} /> */}
 
             {/* Protected Routes */}
@@ -55,6 +58,30 @@ function App() {
               element={
                 <PrivateRoute>
                   <Profile />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/selling"
+              element={
+                <PrivateRoute>
+                  <Selling />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/buying"
+              element={
+                <PrivateRoute>
+                  <Buying />
+                </PrivateRoute>
+              }
+              />
+              <Route
+              path="/favourite"
+              element={
+                <PrivateRoute>
+                  <Favourite/>
                 </PrivateRoute>
               }
             />

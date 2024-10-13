@@ -3,6 +3,13 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules"; 
 import "swiper/css";
 import "swiper/css/pagination";
+// // Import Swiper components
+// import { Swiper, SwiperSlide } from 'swiper/react';
+// // Import Swiper modules
+// import { Pagination } from 'swiper/modules';
+// // Import Swiper styles
+// import 'swiper/css';
+// import 'swiper/css/pagination';
 
 const SliderCard = () => {
   return (

@@ -51,7 +51,7 @@ const NavbarTop = () => {
               <Link to="/profile" className="text-2xl text-gray-700 pr-2">
                 <FaUser/>
               </Link>
-              <Link to="/favourites" className="text-2xl text-gray-700 pr-2">
+              <Link to="/favourite" className="text-2xl text-gray-700 pr-2">
                 <FaHeart/>
               </Link>
               <button

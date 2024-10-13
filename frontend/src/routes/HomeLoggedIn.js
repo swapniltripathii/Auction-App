@@ -8,8 +8,9 @@ import axios from "axios";
 import localImage from "../assets/images/banner1.webp"; // Import the local image
 import localImage2 from "../assets/images/banner2.webp";
 import SliderCard from "../components/SliderCard";
+import Footer from "../components/Footer";
 const HomeLoggedIn = () => {
-  const { currentUser } = useAuth(); 
+  const { currentUser } = useAuth();
 
   return (
     <div className="w-full h-full">
@@ -27,7 +28,7 @@ const HomeLoggedIn = () => {
         {/* Product Listings Grid */}
         <div className="pl-8 pr-8">
           <Apparels />
-          {/* Local Image */ }
+          {/* Local Image */}
           {/* <div className="my-4 flex justify-center rounded-2xl">
             <img
             Banner#
@@ -41,11 +42,12 @@ const HomeLoggedIn = () => {
               className="w-auto item-center ml-10 rounded-3xl  h-auto"
             />
           </div> */}
-          <SliderCard/>
+          <SliderCard />
           <Collectibles />
           <Sneakers />
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

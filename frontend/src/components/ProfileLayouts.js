@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/authContext/authcontext";
-import { getAuth } from "firebase/auth";
+import { useLocation, Link } from "react-router-dom"; // Import useLocation and Link
 import NavbarTop from "./shared/NavbarTop";
-import { Link } from "react-router-dom";
 import {
   FaUser,
   FaShoppingCart,
@@ -14,22 +13,27 @@ import {
 } from "react-icons/fa";
 
 const ProfileLayout = ({ children }) => {
-  const { currentUser } = useAuth(); // get the logged-in user's details
+  const { currentUser } = useAuth();
   const [userData, setUserData] = useState({
     displayName: "",
     email: "",
-    uid: "", // Add uid to your userData state
+    uid: "",
   });
+
+  const location = useLocation(); // Get current location
 
   useEffect(() => {
     if (currentUser) {
       setUserData({
         displayName: currentUser.displayName || "Name not set",
         email: currentUser.email,
-        uid: currentUser.uid, // Fetch the uid from currentUser
+        uid: currentUser.uid,
       });
     }
   }, [currentUser]);
+
+  // Helper function to check if the current path matches the link
+  const isActive = (path) => location.pathname === path;
 
   return (
     <div className="w-full h-full">
@@ -40,14 +44,15 @@ const ProfileLayout = ({ children }) => {
         {/* Sidebar */}
         <div className="h-full w-1/5 bg-gray-100">
           <div className="text-black font-normal text-2xl mt-4 ml-3">
-            {/* Display user's name here */}
             {userData.displayName}
           </div>
-          <div className="flex flex-col items-start space-y-4 pl-4 pt-6 bg-gray-100">
+          <div className="flex flex-col items-start pt-6 bg-gray-100">
             {/* Profile */}
             <Link
               to="/profile"
-              className="flex items-center space-x-4 hover:bg-white hover:text-gray-800 p-2 w-full rounded-md"
+              className={`flex items-center space-x-4 p-4 w-full rounded-md ${
+                isActive("/profile") ? "bg-white" : "hover:bg-white"
+              }`}
             >
               <FaUser className="text-2xl text-gray-700" />
               <div>
@@ -63,14 +68,14 @@ const ProfileLayout = ({ children }) => {
             {/* Buying */}
             <Link
               to="/buying"
-              className="flex items-center space-x-4 hover:bg-white hover:text-gray-800 p-2 w-full rounded-md"
+              className={`flex items-center space-x-4 p-4 w-full rounded-md ${
+                isActive("/buying") ? "bg-white" : "hover:bg-white"
+              }`}
             >
               <FaShoppingCart className="text-2xl text-gray-700" />
               <div>
                 <span className="block text-gray-700 font-medium">Buying</span>
-                <span className="text-sm text-gray-500">
-                  Active Bids, Orders
-                </span>
+                <span className="text-sm text-gray-500">Active Bids, Orders</span>
               </div>
             </Link>
 
@@ -79,7 +84,9 @@ const ProfileLayout = ({ children }) => {
             {/* Selling */}
             <Link
               to="/selling"
-              className="flex items-center space-x-4 hover:bg-white hover:text-gray-800 p-2 w-full rounded-md"
+              className={`flex items-center space-x-4 p-4 w-full rounded-md ${
+                isActive("/selling") ? "bg-white" : "hover:bg-white"
+              }`}
             >
               <FaMoneyBill className="text-2xl text-gray-700" />
               <div>
@@ -92,8 +99,10 @@ const ProfileLayout = ({ children }) => {
 
             {/* Favorites */}
             <Link
-              to="/favourites"
-              className="flex items-center space-x-4 hover:bg-white hover:text-gray-800 p-2 w-full rounded-md"
+              to="/favourite"
+              className={`flex items-center space-x-4 p-4 w-full rounded-md ${
+                isActive("/favourite") ? "bg-white" : "hover:bg-white"
+              }`}
             >
               <FaHeart className="text-2xl text-gray-700" />
               <div>
@@ -107,7 +116,9 @@ const ProfileLayout = ({ children }) => {
             {/* Wallet */}
             <Link
               to="/wallet"
-              className="flex items-center space-x-4 hover:bg-white hover:text-gray-800 p-2 w-full rounded-md"
+              className={`flex items-center space-x-4 p-4 w-full rounded-md ${
+                isActive("/wallet") ? "bg-white" : "hover:bg-white"
+              }`}
             >
               <FaWallet className="text-2xl text-gray-700" />
               <div>
@@ -122,8 +133,10 @@ const ProfileLayout = ({ children }) => {
 
             {/* Settings */}
             <Link
-              to="/settings"
-              className="flex items-center space-x-4 hover:bg-white hover:text-gray-800 p-2 w-full rounded-md"
+              to="/setting"
+              className={`flex items-center space-x-4 p-4 w-full rounded-md ${
+                isActive("/setting") ? "bg-white" : "hover:bg-white"
+              }`}
             >
               <FaCog className="text-2xl text-gray-700" />
               <div>
@@ -139,7 +152,9 @@ const ProfileLayout = ({ children }) => {
             {/* Log Out */}
             <Link
               to="/logout"
-              className="flex items-center space-x-4 hover:bg-white hover:text-gray-800 p-2 w-full rounded-md"
+              className={`flex items-center space-x-4 p-4 w-full rounded-md ${
+                isActive("/logout") ? "bg-white" : "hover:bg-white"
+              }`}
             >
               <FaSignOutAlt className="text-2xl text-gray-700" />
               <span className="block text-gray-700 font-medium">Log Out</span>
