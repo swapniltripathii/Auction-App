@@ -7,7 +7,7 @@ import Sneakers from "../components/categories/Sneakers";
 import axios from "axios";
 import localImage from "../assets/images/banner1.webp"; // Import the local image
 import localImage2 from "../assets/images/banner2.webp";
-
+import SliderCard from "../components/SliderCard";
 const HomeLoggedIn = () => {
   const { currentUser } = useAuth(); 
 
@@ -27,9 +27,10 @@ const HomeLoggedIn = () => {
         {/* Product Listings Grid */}
         <div className="pl-8 pr-8">
           <Apparels />
-          {/* Local Image */}
-          <div className="my-4 flex justify-center rounded-2xl">
+          {/* Local Image */ }
+          {/* <div className="my-4 flex justify-center rounded-2xl">
             <img
+            Banner#
               src={localImage}
               alt="Local"
               className="w-auto item-center  rounded-3xl h-auto"
@@ -39,7 +40,8 @@ const HomeLoggedIn = () => {
               alt="Local"
               className="w-auto item-center ml-10 rounded-3xl  h-auto"
             />
-          </div>
+          </div> */}
+          <SliderCard/>
           <Collectibles />
           <Sneakers />
         </div>
