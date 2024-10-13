@@ -1,35 +1,20 @@
-// tailwind.config.js
-
 module.exports = {
-  purge: [],
-  darkMode: false, // or 'media' or 'class'
+  purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'], // Add paths for optimization
+  darkMode: 'class', // Enable dark mode class-based, or you can use 'media'
   theme: {
     extend: {
       fontFamily: {
-        poppins: ["Poppins", "sans-serif"],
+        poppins: ['Poppins', 'sans-serif'],
       },
       height: {
-        34: "8.5rem", // Adjust the value as per your design needs
+        34: '8.5rem', // Custom height utility
       },
-      BackgroundColour: {
-        "app-black": "#121212",
+      backgroundColor: {
+        'app-black': '#121212', // Corrected spelling to backgroundColor
       },
     },
-  },
-  variants: {
-    extend: {},
   },
   plugins: [
-    require('tailwind-scrollbar'),
-    function ({ addUtilities }) {
-      addUtilities(
-        {
-          ".h-34": {
-            height: "8.5rem", // Adjust the value as per your design needs
-          },
-        },
-        ["responsive", "hover"]
-      );
-    },
+    require('tailwind-scrollbar'), // Useful plugin
   ],
 };

@@ -13,7 +13,7 @@ const Collections = () => {
         <NavbarTop />
       </div>
       {/* Home content */}
-      <div className="w-full p-4 bg-green-200">
+      <div className="w-full h-full p-4 bg-gray-200">
         <h1 className="text-black text-2xl">
           Welcome, {currentUser?.email || "User"}!
         </h1>

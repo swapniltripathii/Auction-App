@@ -13,7 +13,7 @@ const Home = () => {
     <div className="w-full h-full">
       {/* Navbar */}
       <div className="w-full">
-        <div className="fixed w-screen flex justify-between items-center h-24 p-8 shadow-md z-10 border-b bg-pink-200">
+        <div className="fixed w-screen flex justify-between items-center h-24 p-8 shadow-md z-10 border-b bg-gray-200">
           <div className="flex items-center">
             <Link to="/">
               <img
@@ -72,7 +72,7 @@ const Home = () => {
         </div>
 
         {/* Home Content */}
-        <div className="p-4 mt-0 bg-blue-200">
+        <div className="p-4 mt-0 bg-gray-200">
           <div className="mt-36 pl-8 pr-8">
             <Apparels />
             <div className="my-4 flex justify-center rounded-2xl">

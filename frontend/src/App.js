@@ -13,6 +13,7 @@ import Collections from "./routes/Collections";
 import Clothes from "./routes/Clothes";
 import Profile from "./routes/Profile";
 
+
 function App() {
   return (
     <div className="w-screen h-screen font-poppins overflow-x-hidden overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-300">
@@ -27,6 +28,7 @@ function App() {
             <Route path="/shoes" element={<Shoes/>} />
             <Route path="/apparels" element={<Clothes/>} />
             <Route path="/collectibles" element={<Collections/>} />
+            {/* <Route path="/demo" element={<Buy/>} /> */}
 
             {/* Protected Routes */}
             <Route

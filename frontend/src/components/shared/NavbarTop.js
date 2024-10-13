@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import "./NavbarBottom.css";
 import logo from "../../assets/images/logo.png";
 import { useAuth } from "../../contexts/authContext/authcontext";
-import { FaUser } from "react-icons/fa";
+import { FaUser, FaHeart } from "react-icons/fa";
 
 const NavbarTop = () => {
   const { userLoggedIn, handleLogout } = useAuth();
@@ -21,13 +21,13 @@ const NavbarTop = () => {
   return (
     <div>
       {/* Top Navbar */}
-      <div className="fixed w-screen flex justify-between items-center h-24 p-8 bg-neutral-100 shadow-md z-10 border-b bg-white">
+      <div className="fixed w-screen flex justify-between items-center h-24 p-8 bg-neutral-100 shadow-md z-10 border-b bg-gray-200">
         <div className="flex items-center">
           <Link to="/home">
             <img src={logo} alt="BidRare Logo" className="h-24 w-50" />
           </Link>
         </div>
-        <div className="flex-grow py-6 px-12  ml-2 mr-4">
+        <div className="flex-grow py-6 px-12  ml-2 mr-2">
           <input
             type="text"
             placeholder="Search"
@@ -35,13 +35,13 @@ const NavbarTop = () => {
           />
         </div>
         <div className="flex items-center space-x-5">
-          <Link to="/about" className="text-gray-900 px-2 text-xl font-medium">
+          <Link to="/about" className="text-gray-900 px-1 text-xl font-medium">
             About
           </Link>
-          <Link to="/help" className="text-gray-900 px-3 text-xl font-medium">
+          <Link to="/help" className="text-gray-900 px-1 text-xl font-medium">
             Help
           </Link>
-          <Link to="/sell" className="text-gray-900 px-3 text-xl font-medium">
+          <Link to="/sell" className="text-gray-900 px-2 text-xl font-medium">
             Sell
           </Link>
 
@@ -49,11 +49,14 @@ const NavbarTop = () => {
           {userLoggedIn ? (
             <>
               <Link to="/profile" className="text-2xl text-gray-700 pr-2">
-                <FaUser />
+                <FaUser/>
+              </Link>
+              <Link to="/favourites" className="text-2xl text-gray-700 pr-2">
+                <FaHeart/>
               </Link>
               <button
                 onClick={handleLogoutClick} // Use the updated logout handler
-                className="px-4 py-2 bg-white text-black border border-black hover:bg-black transition duration-300 hover:text-white font-medium rounded-3xl"
+                className="px-2 py-1 bg-white text-black border border-black hover:bg-black transition hover:text-white font-medium rounded-3xl"
               >
                 Logout
               </button>
@@ -62,13 +65,13 @@ const NavbarTop = () => {
             <>
               <Link
                 to="/login"
-                className="px-4 py-2 bg-white text-black border border-black hover:bg-black transition duration-300 hover:text-white font-medium rounded-3xl"
+                className="px-2 py-1 bg-white text-black border border-black hover:bg-black transition duration-300 hover:text-white font-medium rounded-3xl"
               >
                 Login
               </Link>
               <Link
                 to="/signup"
-                className="px-4 py-2 bg-white text-black border border-black hover:bg-black transition duration-300 hover:text-white font-medium rounded-3xl"
+                className="px-2 py-1 bg-white text-black border border-black hover:bg-black transition duration-300 hover:text-white font-medium rounded-3xl"
               >
                 Signup
               </Link>

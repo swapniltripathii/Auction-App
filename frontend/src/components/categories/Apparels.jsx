@@ -6,7 +6,7 @@ const Apparels = () => {
   const apparelProducts = products.apparels; // Get only apparels
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 product-container p-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6 product-container p-4">
       {apparelProducts.map((product) => (
         <Card key={product.id} product={product} />
       ))}

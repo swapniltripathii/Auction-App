@@ -1,21 +1,34 @@
 import React from 'react';
+import { FaHeart } from 'react-icons/fa';
 
 const Card = ({ product }) => {
   return (
-    <div className="border p-3 rounded-lg shadow-lg bg-white">
+    <div className="bg-black text-white pt-4 pl-4 pr-4 pb-2 rounded-lg shadow-lg max-w-xs">
       <div className="w-full h-44 flex justify-center items-center">
         <img
           src={product.image}
           alt={product.name}
-          className="max-w-full max-h-full object-contain"
+          className="w-full h-48 mt-3 object-contain bg-white rounded-lg"
         />
       </div>
-      <h2 className="mt-4 text-lg font-semibold">{product.name}</h2>
-      <p className="text-gray-700">${product.price}</p>
 
-      <button className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-        Buy
-      </button>
+      {/* Fixed height for name */}
+      <div className="mt-6 h-8 ">
+        <h3 className="text-lg font-semibold leading-tight truncate ">
+          {product.name}
+        </h3>
+      </div>
+
+      {/* Flexbox for prices and heart icon */}
+      <div className="flex justify-between items-center mt-1">
+        <div>
+          <p className="text-gray-400 text-sm">Lowest Ask</p>
+          <p className="text-2xl font-bold">${product.lowestAsk}</p>
+        </div>
+        <button className="p-2 bg-white rounded-full"> {/* Heart icon button */}
+          <FaHeart className="text-black" />
+        </button>
+      </div>
     </div>
   );
 };
