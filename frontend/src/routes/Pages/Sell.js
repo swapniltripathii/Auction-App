@@ -10,60 +10,41 @@ import {
   getDoc,
 } from "firebase/firestore";
 
-import {
-  getStorage,
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  deleteObject,
-} from "firebase/storage";
 import { getAuth } from "firebase/auth";
 
 export default function Sell() {
   const [activeTab, setActiveTab] = useState("newListing");
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("");
-  const [image, setImage] = useState(null);
+  const [imageUrl, setImageUrl] = useState(""); // Changed to handle image URL
   const [category, setCategory] = useState("sneakers");
   const [price, setPrice] = useState("");
   const [listings, setListings] = useState([]);
 
   const db = getFirestore();
-  const storage = getStorage();
   const auth = getAuth();
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImage(file);
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userId = auth.currentUser.uid;
 
-    const imageRef = ref(storage, `images/${image.name}`);
-
     try {
-      await uploadBytes(imageRef, image);
-      const imageUrl = await getDownloadURL(imageRef);
-
       await addDoc(collection(db, "products"), {
         userId,
         name: productName,
         description,
         category,
         price: parseFloat(price),
-        imageUrl,
+        imageUrl, // Now using imageUrl directly
         isVerified: false,
       });
 
+      // Clear the form fields
       setProductName("");
       setDescription("");
       setCategory("sneakers");
       setPrice("");
-      setImage(null);
+      setImageUrl(""); // Reset the image URL
     } catch (error) {
       console.error("Error uploading the listing:", error);
     }
@@ -100,9 +81,6 @@ export default function Sell() {
 
   const handleDelete = async (id, imageUrl) => {
     await deleteDoc(doc(db, "products", id));
-
-    const imageRef = ref(storage, imageUrl);
-    await deleteObject(imageRef);
   };
 
   return (
@@ -169,18 +147,21 @@ export default function Sell() {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="image" className="block text-black font-medium">
-              Upload Image
+            <label htmlFor="image-url" className="block text-black font-medium">
+              Image URL
             </label>
             <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+              id="image-url"
+              type="text"
+              placeholder="Enter Image URL"
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+              required
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
             />
-            {image && (
+            {imageUrl && (
               <img
-                src={URL.createObjectURL(image)}
+                src={imageUrl}
                 alt="Product Preview"
                 className="mt-4 max-w-xs mx-auto"
               />

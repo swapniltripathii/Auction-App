@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/authContext/authcontext";
-import { getAuth, updatePassword } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import NavbarTop from "./shared/NavbarTop";
 import { Link } from "react-router-dom";
 import {
@@ -30,6 +30,7 @@ const ProfileLayout = ({ children }) => {
       });
     }
   }, [currentUser]);
+
   return (
     <div className="w-full h-full">
       <div className="w-full h-32">
@@ -44,7 +45,10 @@ const ProfileLayout = ({ children }) => {
           </div>
           <div className="flex flex-col items-start space-y-4 pl-4 pt-6 bg-gray-100">
             {/* Profile */}
-            <Link to="/profile" className="flex items-center space-x-4">
+            <Link
+              to="/profile"
+              className="flex items-center space-x-4 hover:bg-white hover:text-gray-800 p-2 w-full rounded-md"
+            >
               <FaUser className="text-2xl text-gray-700" />
               <div>
                 <span className="block text-gray-700 font-medium">Profile</span>
@@ -57,7 +61,10 @@ const ProfileLayout = ({ children }) => {
             <div className="w-full border-t border-gray-300"></div>
 
             {/* Buying */}
-            <Link to="/buying" className="flex items-center space-x-4">
+            <Link
+              to="/buying"
+              className="flex items-center space-x-4 hover:bg-white hover:text-gray-800 p-2 w-full rounded-md"
+            >
               <FaShoppingCart className="text-2xl text-gray-700" />
               <div>
                 <span className="block text-gray-700 font-medium">Buying</span>
@@ -70,31 +77,38 @@ const ProfileLayout = ({ children }) => {
             <div className="w-full border-t border-gray-300"></div>
 
             {/* Selling */}
-            <Link to="/selling" className="flex items-center space-x-4">
+            <Link
+              to="/selling"
+              className="flex items-center space-x-4 hover:bg-white hover:text-gray-800 p-2 w-full rounded-md"
+            >
               <FaMoneyBill className="text-2xl text-gray-700" />
               <div>
                 <span className="block text-gray-700 font-medium">Selling</span>
-                <span className="text-sm text-gray-500">
-                  Asks, Sales, Profile
-                </span>
+                <span className="text-sm text-gray-500">Asks, Sales, Profile</span>
               </div>
             </Link>
+
             <div className="w-full border-t border-gray-300"></div>
 
             {/* Favorites */}
-            <Link to="/favourites" className="flex items-center space-x-4">
+            <Link
+              to="/favourites"
+              className="flex items-center space-x-4 hover:bg-white hover:text-gray-800 p-2 w-full rounded-md"
+            >
               <FaHeart className="text-2xl text-gray-700" />
               <div>
-                <span className="block text-gray-700 font-medium">
-                  Favorites
-                </span>
+                <span className="block text-gray-700 font-medium">Favorites</span>
                 <span className="text-sm text-gray-500">Saved Items</span>
               </div>
             </Link>
+
             <div className="w-full border-t border-gray-300"></div>
 
             {/* Wallet */}
-            <Link to="/wallet" className="flex items-center space-x-4">
+            <Link
+              to="/wallet"
+              className="flex items-center space-x-4 hover:bg-white hover:text-gray-800 p-2 w-full rounded-md"
+            >
               <FaWallet className="text-2xl text-gray-700" />
               <div>
                 <span className="block text-gray-700 font-medium">Wallet</span>
@@ -103,24 +117,30 @@ const ProfileLayout = ({ children }) => {
                 </span>
               </div>
             </Link>
+
             <div className="w-full border-t border-gray-300"></div>
 
             {/* Settings */}
-            <Link to="/settings" className="flex items-center space-x-4">
+            <Link
+              to="/settings"
+              className="flex items-center space-x-4 hover:bg-white hover:text-gray-800 p-2 w-full rounded-md"
+            >
               <FaCog className="text-2xl text-gray-700" />
               <div>
-                <span className="block text-gray-700 font-medium">
-                  Settings
-                </span>
+                <span className="block text-gray-700 font-medium">Settings</span>
                 <span className="text-sm text-gray-500">
                   Security and Notifications
                 </span>
               </div>
             </Link>
+
             <div className="w-full border-t border-gray-300"></div>
 
             {/* Log Out */}
-            <Link to="/logout" className="flex items-center space-x-4">
+            <Link
+              to="/logout"
+              className="flex items-center space-x-4 hover:bg-white hover:text-gray-800 p-2 w-full rounded-md"
+            >
               <FaSignOutAlt className="text-2xl text-gray-700" />
               <span className="block text-gray-700 font-medium">Log Out</span>
             </Link>
