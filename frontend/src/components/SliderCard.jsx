@@ -24,9 +24,9 @@ const SliderCard = () => {
         </SwiperSlide>
         <SwiperSlide>
           <div className="bg-indigo-50 rounded-2xl h-96 flex justify-center items-center">
-            <span className="text-3xl font-semibold text-indigo-600">
-              Slide 2
-            </span>
+           
+              <img  className="fit" src="https://i.pinimg.com/enabled_hi/564x/34/1e/08/341e0853bf746c5d1f91589c77176bae.jpg" alt="" />
+            
           </div>
         </SwiperSlide>
         <SwiperSlide>

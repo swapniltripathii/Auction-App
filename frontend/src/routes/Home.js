@@ -7,6 +7,7 @@ import localImage from "../assets/images/banner1.webp";
 import localImage2 from "../assets/images/banner2.webp";
 import logo from "../assets/images/logo.png"; 
 import "../components/shared/NavbarBottom.css";
+import SliderCard from "../components/SliderCard";
 
 const Home = () => {
   return (
@@ -75,8 +76,9 @@ const Home = () => {
         <div className="p-4 mt-0 bg-gray-200">
           <div className="mt-36 pl-8 pr-8">
             <Apparels />
-            <div className="my-4 flex justify-center rounded-2xl">
-              <img
+            
+              <SliderCard/>
+              {/* <img
                 src={localImage}
                 alt="Local Banner 1"
                 className="w-auto item-center rounded-3xl h-auto mx-2"
@@ -85,8 +87,8 @@ const Home = () => {
                 src={localImage2}
                 alt="Local Banner 2"
                 className="w-auto item-center ml-16 rounded-3xl h-auto mx-2"
-              />
-            </div>
+              /> */}
+            
             <Collectibles />
             <Sneakers />
           </div>

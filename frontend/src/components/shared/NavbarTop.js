@@ -80,7 +80,7 @@ const NavbarTop = () => {
         </div>
       </div>
 
-      <div className="fixed top-24 flex w-full justify-center items-center p-2 bg-blue-100 border-t border-b border-gray-300">
+      <div className="fixed z-50 top-24 flex w-full justify-center items-center p-2 bg-blue-100 border-t border-b border-gray-300">
         <Link to="/apparels" className="nav-link">
           Apparels
         </Link>
