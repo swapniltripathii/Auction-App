@@ -5,61 +5,79 @@ import {
   doSignInWithGoogle,
 } from "../firebase/auth";
 import { useAuth } from "../contexts/authContext/authcontext"; // Use auth context
+import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore"; // Add Firestore methods
+
 
 const Signup = () => {
-  const { userLoggedIn } = useAuth(); // To check if user is already logged in
+  const { userLoggedIn } = useAuth(); 
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
   });
-  const [isSigningUp, setIsSigningUp] = useState(false); // To disable submit button while signing up
-  const [errorMessage, setErrorMessage] = useState(""); // For storing any error messages
+  const [isSigningUp, setIsSigningUp] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // Handle input changes for the form
+  const db = getFirestore(); 
+
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   }, []);
 
-  // Handle form submission for user signup
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
-      if (isSigningUp) return; // Prevent multiple submissions while signing up
+      if (isSigningUp) return;
 
-      setIsSigningUp(true); // Disable button during signup
+      setIsSigningUp(true);
 
       try {
-        await doCreateUserWithEmailAndPassword(formData.email, formData.password);
-        // Optionally redirect to the home page or login page
+        const userCredential = await doCreateUserWithEmailAndPassword(
+          formData.email,
+          formData.password
+        );
+        const user = userCredential.user; 
+        await setDoc(doc(db, "users", user.uid), {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+        });
       } catch (error) {
-        setErrorMessage(error.message); // Set the error message to display
-        setIsSigningUp(false); // Re-enable the button after failure
+        setErrorMessage(error.message);
+        setIsSigningUp(false);
       }
     },
-    [formData, isSigningUp]
+    [formData, isSigningUp, db]
   );
 
-  // Handle Google sign-in
   const handleGoogleSignIn = useCallback(
     async (e) => {
       e.preventDefault();
       if (isSigningUp) return;
 
-      setIsSigningUp(true); // Disable button during Google sign-in
+      setIsSigningUp(true); 
       try {
-        await doSignInWithGoogle(); // Sign in with Google
+        const userCredential = await doSignInWithGoogle();
+        const user = userCredential.user;
+
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (!userDoc.exists()) {
+          await setDoc(doc(db, "users", user.uid), {
+            firstName: user.displayName.split(" ")[0],
+            lastName: user.displayName.split(" ")[1] || "",
+            email: user.email,
+          });
+        }
       } catch (error) {
-        setErrorMessage(error.message); // Set the error message to display
+        setErrorMessage(error.message);
         setIsSigningUp(false);
       }
     },
-    [isSigningUp]
+    [isSigningUp, db]
   );
 
-  // Redirect if the user is already logged in
   if (userLoggedIn) return <Navigate to="/home" replace={true} />;
 
   return (

@@ -9,24 +9,7 @@ import localImage from "../assets/images/banner1.webp"; // Import the local imag
 import localImage2 from "../assets/images/banner2.webp";
 
 const HomeLoggedIn = () => {
-  const { currentUser } = useAuth(); // Destructure currentUser from the auth context
-  // const [listings, setListings] = useState([]);
-
-  // Fetch product listings when the component mounts
-  // useEffect(() => {
-  //   const fetchListings = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         "http://localhost:8000/api/auth/listings"
-  //       );
-  //       setListings(response.data); // Set the fetched listings data
-  //     } catch (error) {
-  //       console.error("Error fetching listings:", error);
-  //     }
-  //   };
-
-  //   fetchListings();
-  // }, []);
+  const { currentUser } = useAuth(); 
 
   return (
     <div className="w-full h-full">
