@@ -1,18 +1,23 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import {getAuth} from "firebase/auth";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore"; // Import Firestore
+import { getStorage } from "firebase/storage"; // Import Storage
+
 const firebaseConfig = {
-  apiKey: "AIzaSyDRTq5zXb41JZc9Y3AWIxQG2dUrMwjucMU",
-  authDomain: "auctionapp-48b32.firebaseapp.com",
-  projectId: "auctionapp-48b32",
-  storageBucket: "auctionapp-48b32.appspot.com",
-  messagingSenderId: "1061865542512",
-  appId: "1:1061865542512:web:7d92002cc8a106c98435b5",
-  measurementId: "G-70PM144BKL"
+  apiKey: "AIzaSyCFG3T7w1ymuyxW7vM9JAvXunP9TMDTjic",
+  authDomain: "auction-app-2d0e7.firebaseapp.com",
+  projectId: "auction-app-2d0e7",
+  storageBucket: "auction-app-2d0e7.appspot.com",
+  messagingSenderId: "765880756346",
+  appId: "1:765880756346:web:bae4b1ef3a72c0e07f73c3",
+  measurementId: "G-5H1RB33BKH"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app)
+const auth = getAuth(app);
+const firestore = getFirestore(app); // Initialize Firestore
+const storage = getStorage(app); // Initialize Storage
 
-export {app, auth};
+export { app, auth, firestore, storage };
