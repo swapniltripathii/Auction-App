@@ -13,7 +13,7 @@ import Collections from "./routes/Collections";
 import Clothes from "./routes/Clothes";
 import Profile from "./routes/Profile";
 import { ToastContainer, toast } from 'react-toastify';
-
+import ProfileLayout from "./components/ProfileLayouts";
 
 function App() {
   return (
@@ -30,6 +30,7 @@ function App() {
             <Route path="/shoes" element={<Shoes/>} />
             <Route path="/apparels" element={<Clothes/>} />
             <Route path="/collectibles" element={<Collections/>} />
+            <Route path="/profilelayouts" element={<ProfileLayout/>}/>
             {/* <Route path="/demo" element={<Buy/>} /> */}
 
             {/* Protected Routes */}
