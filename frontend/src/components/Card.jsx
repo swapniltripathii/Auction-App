@@ -23,7 +23,7 @@ const Card = ({ product }) => {
           alt={product.name}
           className="w-full h-48 mt-3 object-contain bg-white rounded-lg"
         />
-      </div>
+      </div> 
 
       {/* Fixed height for name */}
       <div className="mt-6 h-8">
