@@ -8,19 +8,18 @@ import {
   doc,
   deleteDoc,
   getDoc,
+  query,
+  where,
 } from "firebase/firestore";
-
 import { getAuth } from "firebase/auth";
 
 export default function Sell() {
-  const [activeTab, setActiveTab] = useState("newListing");
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("");
-  const [imageUrl, setImageUrl] = useState(""); // Changed to handle image URL
+  const [imageUrl, setImageUrl] = useState(""); 
   const [category, setCategory] = useState("sneakers");
   const [price, setPrice] = useState("");
   const [listings, setListings] = useState([]);
-
   const db = getFirestore();
   const auth = getAuth();
 
@@ -35,24 +34,26 @@ export default function Sell() {
         description,
         category,
         price: parseFloat(price),
-        imageUrl, // Now using imageUrl directly
+        imageUrl,
         isVerified: false,
       });
 
-      // Clear the form fields
       setProductName("");
       setDescription("");
       setCategory("sneakers");
       setPrice("");
-      setImageUrl(""); // Reset the image URL
+      setImageUrl("");
     } catch (error) {
       console.error("Error uploading the listing:", error);
     }
   };
 
   useEffect(() => {
+    const userId = auth.currentUser.uid;
     const productsCollection = collection(db, "products");
-    const unsubscribe = onSnapshot(productsCollection, (snapshot) => {
+    const userQuery = query(productsCollection, where("userId", "==", userId));
+
+    const unsubscribe = onSnapshot(userQuery, (snapshot) => {
       const listingsData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -61,33 +62,32 @@ export default function Sell() {
     });
 
     return () => unsubscribe();
-  }, [db]);
+  }, [db, auth]);
 
-  const handleVerify = async (id, category) => {
+  const handleVerify = async (id) => {
+    const userId = auth.currentUser.uid;
     const listingRef = doc(db, "products", id);
     const listingSnapshot = await getDoc(listingRef);
 
     if (listingSnapshot.exists()) {
       const listingData = listingSnapshot.data();
-      const categoryRef = collection(db, category);
-      await addDoc(categoryRef, {
-        ...listingData,
-        isVerified: true,
-      });
-
-      await deleteDoc(listingRef);
+      if (listingData.userId === userId) {
+        await updateDoc(listingRef, { isVerified: true });
+      } else {
+        console.error("You can only verify your own listings.");
+      }
     }
   };
 
-  const handleDelete = async (id, imageUrl) => {
+  const handleDelete = async (id) => {
     await deleteDoc(doc(db, "products", id));
   };
 
   return (
     <div className="container mx-auto p-10 grid grid-cols-1 md:grid-cols-2 gap-10">
       {/* Left Side - New Listing */}
-      <div className="bg-blue-200 p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold mb-4"> New Listing</h2>
+      <div className="bg-gray-300 p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-semibold mb-4">New Listing</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="product-name" className="block text-black font-medium">
@@ -177,32 +177,36 @@ export default function Sell() {
       </div>
 
       {/* Right Side - Current Listings */}
-      <div className="bg-white p-6 rounded-lg bg-green-200 shadow-md">
+      <div className="bg-white p-6 rounded-lg bg-gray-200 shadow-md">
         <h2 className="text-2xl font-semibold mb-4">Current Listings</h2>
         {listings.length === 0 ? (
           <p>No listings available.</p>
         ) : (
-          <ul className="grid grid-cols-1 gap-4">
+          <ul className="grid grid-cols-1 sm:grid-cols-3 lg:grid-row-4 gap-4">
             {listings.map((listing) => (
-              <li key={listing.id} className="border border-gray-300 rounded-lg p-4">
-                <h3 className="text-lg font-semibold">{listing.name}</h3>
+              <li key={listing.id} className="border bg-gray-800 text-white border-black rounded-lg p-2">
+                <h3 className="text-lg font-semibold leading tight truncate">
+                  {listing.name}
+                </h3>
                 <img
                   src={listing.imageUrl}
                   alt={listing.name}
-                  className="max-w-xs my-2"
+                  className="w-1/2 my-2 mx-auto relative"
                 />
                 <p>{listing.description}</p>
                 <p>Category: {listing.category}</p>
                 <p>Price: ${listing.price}</p>
+                <p>Status: {listing.isVerified ? "Verified" : "Unverified"}</p>
                 <div className="flex justify-between mt-2">
                   <button
-                    onClick={() => handleVerify(listing.id, listing.category)}
-                    className="text-green-500 font-medium"
+                    onClick={() => handleVerify(listing.id)}
+                    className={`text-green-500 font-medium ${listing.isVerified ? "opacity-50 cursor-not-allowed" : ""}`}
+                    disabled={listing.isVerified}
                   >
                     Verify
                   </button>
                   <button
-                    onClick={() => handleDelete(listing.id, listing.imageUrl)}
+                    onClick={() => handleDelete(listing.id)}
                     className="text-red-500 font-medium"
                   >
                     Delete
