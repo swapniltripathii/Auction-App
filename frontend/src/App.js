@@ -22,6 +22,8 @@ import Selling from "./routes/Pages/Selling";
 import Buying from "./routes/Pages/Buying";
 import Favourite from "./routes/Pages/Favourite";
 import "react-toastify/dist/ReactToastify.css"; // Toastify CSS
+import 'react-toastify/dist/ReactToastify.css'; // Toastify CSS
+import About from "./routes/Pages/About";
 
 function App() {
   return (
@@ -38,6 +40,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/shoes" element={<Shoes />} />
+            <Route path="/about" element={<About/>} />
             <Route path="/apparels" element={<Clothes />} />
             <Route path="/collectibles" element={<Collections />} />
             <Route path="/accessories" element={<Accessories />} />
