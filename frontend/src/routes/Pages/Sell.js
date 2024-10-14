@@ -137,15 +137,15 @@ export default function Sell() {
 
   // Subcategories based on category selection
   const subcategories = {
-    sneakers: ["Running Shoes", "Casual Shoes","Sneakers", "Basketball Shoes"],
-    apparels: ["T-shirt", "Jersey", "Jacket"],
-    collectibles: ["Action Figures", "Vintage Items", "Memorabilia"],
-    accessories: ["Bags", "Hats", "Belts"],
-    electronics: ["Mobile Phones", "Laptops", "Cameras"],
+    sneakers: ["Running", "Casual","Sneakers", "Basketball", "Sliders","Skate","Football" ],
+    apparels: ["T-shirt", "Jersey", "Jacket","Hoodies & Sweatshirts","Joggers","Pants"],
+    collectibles: ["Action Figures", "Vintage Items", "Memorabilia","Painting","Cards","Toys","Antiques"],
+    accessories: ["Bags", "Caps","Watches","Sunglasses"],
+    electronics: ["Mobile Phones", "Laptops", "Cameras","GPUs","Headphones","TWS"],
   };
 
   return (
-    <div className="container mx-auto p-5 bg-blue-200 overflow grid grid-cols-1 md:grid-cols-2 gap-10">
+    <div className="container mx-auto h-full p-5 bg-blue-200 overflow grid grid-cols-1 md:grid-cols-2 gap-10">
       <div className="bg-gray-300 p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold mb-4"> New Listing</h2>
         <form onSubmit={handleSubmit}>

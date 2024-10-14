@@ -7,16 +7,21 @@ import HomeLoggedIn from "./routes/HomeLoggedIn";
 import Home from "./routes/Home";
 import Sell from "./routes/Pages/Sell";
 import { AuthProvider } from "./contexts/authContext/authcontext";
-import PrivateRoute from "./components/PrivateRoute"; 
-import Shoes from "./routes/Shoes";
-import Collections from "./routes/Collections";
-import Clothes from "./routes/Clothes";
+import PrivateRoute from "./components/PrivateRoute";
+import PrivateAdminRoute from "./PrivateAdminRoute"; // Your custom admin route
+import AdminPanel from "./AdminPanel"; // Import AdminPanel component
+import Shoes from "./routes/NavbarPages.js/Shoes";
+import Collections from "./routes/NavbarPages.js/Collections";
+import Clothes from "./routes/NavbarPages.js/Clothes";
+import Accessories from "./routes/NavbarPages.js/Accessories";
+import Electronics from "./routes/NavbarPages.js/Electronics";
 import Profile from "./routes/Profile";
 import { ToastContainer } from "react-toastify";
 import ProfileLayout from "./components/ProfileLayouts";
 import Selling from "./routes/Pages/Selling";
 import Buying from "./routes/Pages/Buying";
 import Favourite from "./routes/Pages/Favourite";
+import "react-toastify/dist/ReactToastify.css"; // Toastify CSS
 import 'react-toastify/dist/ReactToastify.css'; // Toastify CSS
 import About from "./routes/Pages/About";
 
@@ -38,6 +43,8 @@ function App() {
             <Route path="/about" element={<About/>} />
             <Route path="/apparels" element={<Clothes />} />
             <Route path="/collectibles" element={<Collections />} />
+            <Route path="/accessories" element={<Accessories />} />
+            <Route path="/electronics" element={<Electronics />} />
             <Route path="/profilelayouts" element={<ProfileLayout />} />
 
             {/* Protected Routes */}
@@ -89,6 +96,11 @@ function App() {
                 </PrivateRoute>
               }
             />
+
+            {/* Admin Route */}
+            <Route element={<PrivateAdminRoute />}>
+              <Route path="/admin" element={<AdminPanel />} />
+            </Route>
           </Routes>
         </BrowserRouter>
       </AuthProvider>
