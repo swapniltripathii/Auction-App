@@ -1,4 +1,3 @@
-// src/components/Apparels.js
 import React, { useEffect, useState } from 'react';
 import Card from '../Card'; // Import your Card component
 import { collection, getDocs, getFirestore } from 'firebase/firestore'; // Ensure Firestore is imported
@@ -26,20 +25,28 @@ const Apparels = () => {
         fetchApparelProducts();
     }, [db]);
 
+    // Render loader if loading is still true
+    if (Loading) {
+        return <Loader />; // Show the loader without wrapping it in a div
+    }
+
+    // Render "No Apparels Left" message if no products are found after loading
+    if (apparelProducts.length === 0) {
+        return (
+            <div className="flex justify-center items-center h-screen"> {/* Centering text horizontally and vertically */}
+                <h1 className="text-center text-4xl font-bold text-gray-700">No Apparels Left</h1> {/* Centered and large text */}
+            </div>
+        );
+    }
+
+    // Render products once loaded
     return (
         <div className="product-container p-4">
-            {Loading ? ( // Display loader if loading is true
-                <div className="flex justify-center items-center">
-                    <div className="loader"></div> {/* Simple CSS loader */}
-                    <Loader />
-                </div>
-            ) : (
-                <div className="grid sm:grid-cols-6 gap-6">
-                    {apparelProducts.map((product) => (
-                        <Card key={product.id} product={product} />
-                    ))}
-                </div>
-            )}
+            <div className="grid sm:grid-cols-6 gap-6">
+                {apparelProducts.map((product) => (
+                    <Card key={product.id} product={product} />
+                ))}
+            </div>
         </div>
     );
 };
