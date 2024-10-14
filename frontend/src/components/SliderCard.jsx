@@ -10,7 +10,7 @@ import banner3 from '../assets/images/banner3.png'
 
 const SliderCard = () => {
   return (
-    <div className="relative mt-24 mr-20 ml-20 mx-auto"> {/* Adjust the width here */} 
+    <div className="relative mt-4 mb-5 mr-20 ml-20 mx-auto"> {/* Adjust the width here */} 
       <Swiper
         modules={[Pagination, Autoplay]} 
         pagination={{ clickable: true, el: ".swiper-pagination" }}
