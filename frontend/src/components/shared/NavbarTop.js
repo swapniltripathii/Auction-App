@@ -1,13 +1,51 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import "./NavbarBottom.css";
 import logo from "../../assets/images/logo.png";
 import { useAuth } from "../../contexts/authContext/authcontext";
 import { FaUser, FaHeart } from "react-icons/fa";
+import { motion } from "framer-motion";
+
+// New container and item animation definitions
+const container = {
+  hidden: { opacity: 0.7, scale: 0 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      delayChildren: 0.5,
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const item = {
+  hidden: { y: 20, opacity: 0.01 },
+  visible: {
+    y: 0,
+    opacity: 1,
+  },
+};
 
 const NavbarTop = () => {
   const { userLoggedIn, handleLogout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation(); // To get the current route
+
+  // State to track whether the animation should play
+  const [shouldAnimate, setShouldAnimate] = useState(false);
+
+  // useEffect to check if the current route is /home
+  useEffect(() => {
+    if (location.pathname === "/home") {
+      setShouldAnimate(true); // Enable animation when on /home route
+      const timeout = setTimeout(() => {
+        setShouldAnimate(false); // Disable animation after it plays
+      }, 1500); // Match the animation duration
+
+      return () => clearTimeout(timeout); // Cleanup on unmount
+    }
+  }, [location.pathname]); // Re-run when the route changes
 
   const handleLogoutClick = async () => {
     try {
@@ -24,10 +62,31 @@ const NavbarTop = () => {
       <div className="fixed w-screen flex justify-between items-center h-24 p-8 bg-neutral-100 shadow-md z-10 border-b bg-gray-200">
         <div className="flex items-center">
           <Link to="/home">
-            <img src={logo} alt="BidRare Logo" className="h-24 w-50" />
+            {/* Conditionally animate the logo only on /home */}
+            {shouldAnimate ? (
+              <motion.div
+                className="logo-container"
+                variants={container} // Apply container animation
+                initial="hidden"
+                animate="visible"
+              >
+                <motion.img
+                  src={logo}
+                  alt="BidRare Logo"
+                  className="h-24 w-50"
+                  variants={item} // Apply item animation to the logo
+                />
+              </motion.div>
+            ) : (
+              <img
+                src={logo}
+                alt="BidRare Logo"
+                className="h-24 w-50"
+              />
+            )}
           </Link>
         </div>
-        <div className="flex-grow py-6 px-12  ml-2 mr-2">
+        <div className="flex-grow py-6 px-12 ml-2 mr-2">
           <input
             type="text"
             placeholder="Search"
@@ -49,13 +108,13 @@ const NavbarTop = () => {
           {userLoggedIn ? (
             <>
               <Link to="/profile" className="text-2xl text-gray-700 pr-2">
-                <FaUser/>
+                <FaUser />
               </Link>
               <Link to="/favourite" className="text-2xl text-gray-700 pr-2">
-                <FaHeart/>
+                <FaHeart />
               </Link>
               <button
-                onClick={handleLogoutClick} // Use the updated logout handler
+                onClick={handleLogoutClick}
                 className="px-2 py-1 bg-white text-black border border-black hover:bg-black transition hover:text-white font-medium rounded-3xl"
               >
                 Logout

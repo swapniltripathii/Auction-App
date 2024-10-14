@@ -38,6 +38,7 @@ export default function Sell() {
         price: parseFloat(price),
         imageUrl, // Now using imageUrl directly
         isVerified: false,
+        isliked :false,
       });
 
       // Clear the form fields
