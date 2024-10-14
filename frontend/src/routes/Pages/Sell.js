@@ -8,17 +8,16 @@ import {
   doc,
   deleteDoc,
   getDoc,
-  getDocs, // Add this line
+  getDocs,
 } from "firebase/firestore";
-
 import { getAuth } from "firebase/auth";
 
 export default function Sell() {
   const [activeTab, setActiveTab] = useState("newListing");
   const [productName, setProductName] = useState("");
-  const [description, setDescription] = useState("");
-  const [imageUrl, setImageUrl] = useState(""); // Changed to handle image URL
+  const [imageUrl, setImageUrl] = useState("");
   const [category, setCategory] = useState("sneakers");
+  const [subcategory, setSubcategory] = useState(""); // New state for subcategory
   const [price, setPrice] = useState("");
   const [listings, setListings] = useState([]);
 
@@ -33,20 +32,20 @@ export default function Sell() {
       await addDoc(collection(db, "products"), {
         userId,
         name: productName,
-        description,
         category,
+        subcategory, // Now including subcategory
         price: parseFloat(price),
-        imageUrl, // Now using imageUrl directly
+        imageUrl,
         isVerified: false,
         isliked: false,
       });
 
       // Clear the form fields
       setProductName("");
-      setDescription("");
       setCategory("sneakers");
+      setSubcategory(""); // Reset the subcategory
       setPrice("");
-      setImageUrl(""); // Reset the image URL
+      setImageUrl("");
     } catch (error) {
       console.error("Error uploading the listing:", error);
     }
@@ -55,15 +54,15 @@ export default function Sell() {
   useEffect(() => {
     const productsCollection = collection(db, "products");
     const unsubscribe = onSnapshot(productsCollection, (snapshot) => {
-      const userId = auth.currentUser.uid; // Get the current user's ID
+      const userId = auth.currentUser.uid;
       const listingsData = snapshot.docs
         .map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }))
-        .filter((listing) => listing.userId === userId); // Filter to show only the user's listings
+        .filter((listing) => listing.userId === userId);
 
-      console.log("Current user listings:", listingsData); // Log the filtered listings
+      console.log("Current user listings:", listingsData);
       setListings(listingsData);
     });
 
@@ -78,15 +77,10 @@ export default function Sell() {
     if (listingSnapshot.exists()) {
       const listingData = listingSnapshot.data();
 
-      // Check if the product belongs to the logged-in user
       if (listingData.userId === userId) {
-        // Update the isVerified field in the original 'products' collection
         await updateDoc(listingRef, { isVerified: true });
 
-        // Create a reference to the category-specific collection (e.g., 'sneakers')
         const categoryRef = collection(db, category);
-
-        // Add the listing to the category-specific collection with isVerified set to true
         await addDoc(categoryRef, {
           ...listingData,
           isVerified: true,
@@ -100,7 +94,7 @@ export default function Sell() {
   };
 
   const handleDelete = async (id) => {
-    console.log("Attempting to delete product with ID:", id); // Log ID being deleted
+    console.log("Attempting to delete product with ID:", id);
     const listingRef = doc(db, "products", id);
     const listingSnapshot = await getDoc(listingRef);
 
@@ -109,15 +103,12 @@ export default function Sell() {
       const category = listingData.category;
 
       try {
-        // 1. Delete from 'products' collection
         await deleteDoc(listingRef);
         console.log("Deleted from products collection");
 
-        // 2. Delete from the corresponding category-specific collection
         const categoryCollectionRef = collection(db, category);
         const querySnapshot = await getDocs(categoryCollectionRef);
 
-        // Find the document in the category collection that matches the product ID
         const categoryDoc = querySnapshot.docs.find(
           (doc) =>
             doc.data().userId === listingData.userId &&
@@ -131,7 +122,6 @@ export default function Sell() {
           console.warn("Category document not found for deletion");
         }
 
-        // 3. Update the local state to remove the deleted listing
         setListings((prevListings) =>
           prevListings.filter((listing) => listing.id !== id)
         );
@@ -145,9 +135,17 @@ export default function Sell() {
     }
   };
 
+  // Subcategories based on category selection
+  const subcategories = {
+    sneakers: ["Running Shoes", "Casual Shoes","Sneakers", "Basketball Shoes"],
+    apparels: ["T-shirt", "Jersey", "Jacket"],
+    collectibles: ["Action Figures", "Vintage Items", "Memorabilia"],
+    accessories: ["Bags", "Hats", "Belts"],
+    electronics: ["Mobile Phones", "Laptops", "Cameras"],
+  };
+
   return (
     <div className="container mx-auto p-5 bg-blue-200 overflow grid grid-cols-1 md:grid-cols-2 gap-10">
-      {/* Left Side - New Listing */}
       <div className="bg-gray-300 p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold mb-4"> New Listing</h2>
         <form onSubmit={handleSubmit}>
@@ -168,22 +166,7 @@ export default function Sell() {
               className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
             />
           </div>
-          <div className="mb-4">
-            <label
-              htmlFor="description"
-              className="block text-black font-medium"
-            >
-              Description
-            </label>
-            <textarea
-              id="description"
-              placeholder="Enter Product Description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              required
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-            />
-          </div>
+
           <div className="mb-4">
             <label htmlFor="category" className="block text-black font-medium">
               Category
@@ -191,15 +174,46 @@ export default function Sell() {
             <select
               id="category"
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={(e) => {
+                setCategory(e.target.value);
+                setSubcategory(""); // Reset subcategory when category changes
+              }}
               required
               className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
             >
               <option value="sneakers">Sneakers</option>
               <option value="apparels">Apparels</option>
               <option value="collectibles">Collectibles</option>
+              <option value="accessories">Accessories</option>
+              <option value="electronics">Electronics</option>
             </select>
           </div>
+
+          <div className="mb-4">
+            <label
+              htmlFor="subcategory"
+              className="block text-black font-medium"
+            >
+              Subcategory
+            </label>
+            <select
+              id="subcategory"
+              value={subcategory}
+              onChange={(e) => setSubcategory(e.target.value)}
+              required
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            >
+              <option value="" disabled>
+                Select Subcategory
+              </option>
+              {subcategories[category]?.map((subcat) => (
+                <option key={subcat} value={subcat}>
+                  {subcat}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div className="mb-4">
             <label htmlFor="price" className="block text-black font-medium">
               Price ($)
@@ -214,6 +228,7 @@ export default function Sell() {
               className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
             />
           </div>
+
           <div className="mb-4">
             <label htmlFor="image-url" className="block text-black font-medium">
               Image URL
@@ -235,6 +250,7 @@ export default function Sell() {
               />
             )}
           </div>
+
           <div className="flex justify-center">
             <button
               type="submit"
@@ -246,7 +262,6 @@ export default function Sell() {
         </form>
       </div>
 
-      {/* Right Side - Current Listings */}
       <div className="p-4 rounded-lg bg-gray-600 h-full overflow shadow-md">
         <h2 className="text-2xl font-semibold mb-4">Current Listings</h2>
         {listings.length === 0 ? (
@@ -254,13 +269,12 @@ export default function Sell() {
         ) : (
           <ul className="grid grid-cols-1 sm:grid-cols-3 lg:grid-row-4 gap-4">
             {listings
-              .sort((a, b) => a.isVerified - b.isVerified) // Sort: unverified first
+              .sort((a, b) => a.isVerified - b.isVerified)
               .map((listing) => (
                 <li
                   key={listing.id}
                   className="border bg-white text-black text-sm border-black rounded-lg p-2"
                 >
-                  {/* Reduced padding to make card smaller */}
                   <h3 className="text-lg font-semibold leading-tight truncate">
                     {listing.name}
                   </h3>
@@ -269,14 +283,13 @@ export default function Sell() {
                     alt={listing.name}
                     className="w-1/2 my-2 mx-auto"
                   />
-
-                  <p>{listing.description}</p>
+                  <p>Subcategory: {listing.subcategory}</p>{" "}
+                  {/* Display subcategory */}
                   <p>Category: {listing.category}</p>
                   <p>Price: ${listing.price}</p>
                   <p>
                     Status: {listing.isVerified ? "Verified" : "Unverified"}
                   </p>
-
                   <div className=" flex justify-between">
                     <button
                       onClick={() => handleVerify(listing.id, listing.category)}

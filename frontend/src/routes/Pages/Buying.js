@@ -12,7 +12,7 @@ const Buying = () => {
     <div className="h-full w-full bg-white">
       <ProfileLayout>
         <div className="p-6 bg-white">
-          <h1 className="text-3xl font-semibold text-gray-800 mb-6">favourite</h1>
+          <h1 className="text-3xl font-semibold text-gray-800 mb-6"></h1>
 
           
         </div>
