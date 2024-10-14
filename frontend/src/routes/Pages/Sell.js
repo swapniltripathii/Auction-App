@@ -36,6 +36,7 @@ export default function Sell() {
         price: parseFloat(price),
         imageUrl,
         isVerified: false,
+        isliked :false,
       });
 
       setProductName("");
