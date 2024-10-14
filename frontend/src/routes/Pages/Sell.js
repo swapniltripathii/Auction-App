@@ -54,16 +54,21 @@ export default function Sell() {
   useEffect(() => {
     const productsCollection = collection(db, "products");
     const unsubscribe = onSnapshot(productsCollection, (snapshot) => {
-      const listingsData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      console.log("Current listings:", listingsData); // Log the listings
+      const userId = auth.currentUser.uid; // Get the current user's ID
+      const listingsData = snapshot.docs
+        .map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+        .filter((listing) => listing.userId === userId); // Filter to show only the user's listings
+  
+      console.log("Current user listings:", listingsData); // Log the filtered listings
       setListings(listingsData);
     });
-
+  
     return () => unsubscribe();
-  }, [db]);
+  }, [db, auth.currentUser.uid]);
+  
 
   const handleVerify = async (id, category) => {
     const userId = auth.currentUser.uid;
