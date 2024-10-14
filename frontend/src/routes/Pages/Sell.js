@@ -38,7 +38,7 @@ export default function Sell() {
         price: parseFloat(price),
         imageUrl, // Now using imageUrl directly
         isVerified: false,
-        isliked :false,
+        isliked: false,
       });
 
       // Clear the form fields
@@ -62,14 +62,13 @@ export default function Sell() {
           ...doc.data(),
         }))
         .filter((listing) => listing.userId === userId); // Filter to show only the user's listings
-  
+
       console.log("Current user listings:", listingsData); // Log the filtered listings
       setListings(listingsData);
     });
-  
+
     return () => unsubscribe();
   }, [db, auth.currentUser.uid]);
-  
 
   const handleVerify = async (id, category) => {
     const userId = auth.currentUser.uid;
@@ -104,37 +103,39 @@ export default function Sell() {
     console.log("Attempting to delete product with ID:", id); // Log ID being deleted
     const listingRef = doc(db, "products", id);
     const listingSnapshot = await getDoc(listingRef);
-  
+
     if (listingSnapshot.exists()) {
       const listingData = listingSnapshot.data();
       const category = listingData.category;
-  
+
       try {
         // 1. Delete from 'products' collection
         await deleteDoc(listingRef);
         console.log("Deleted from products collection");
-  
+
         // 2. Delete from the corresponding category-specific collection
         const categoryCollectionRef = collection(db, category);
         const querySnapshot = await getDocs(categoryCollectionRef);
-  
+
         // Find the document in the category collection that matches the product ID
         const categoryDoc = querySnapshot.docs.find(
-          (doc) => doc.data().userId === listingData.userId && doc.data().name === listingData.name
+          (doc) =>
+            doc.data().userId === listingData.userId &&
+            doc.data().name === listingData.name
         );
-  
+
         if (categoryDoc) {
           await deleteDoc(doc(db, category, categoryDoc.id));
           console.log("Deleted from category collection");
         } else {
           console.warn("Category document not found for deletion");
         }
-  
+
         // 3. Update the local state to remove the deleted listing
         setListings((prevListings) =>
           prevListings.filter((listing) => listing.id !== id)
         );
-  
+
         console.log("Product deleted from both collections.");
       } catch (error) {
         console.error("Error deleting the product:", error);
@@ -143,10 +144,9 @@ export default function Sell() {
       console.error("Product not found in the 'products' collection.");
     }
   };
-  
 
   return (
-    <div className="container mx-auto p-10 grid grid-cols-1 md:grid-cols-2 gap-10">
+    <div className="container mx-auto p-5 bg-blue-200 overflow grid grid-cols-1 md:grid-cols-2 gap-10">
       {/* Left Side - New Listing */}
       <div className="bg-gray-300 p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold mb-4"> New Listing</h2>
@@ -231,65 +231,74 @@ export default function Sell() {
               <img
                 src={imageUrl}
                 alt="Product Preview"
-                className="mt-4 max-w-xs mx-auto"
+                className="mt-4 w-36 mx-auto"
               />
             )}
           </div>
-          <button
-            type="submit"
-            className="w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition duration-50"
-          >
-            Submit Listing
-          </button>
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              className="w-1/3 bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition duration-50"
+            >
+              Submit Listing
+            </button>
+          </div>
         </form>
       </div>
 
       {/* Right Side - Current Listings */}
-      <div className="bg-white p-6 rounded-lg bg-gray-200 shadow-md">
+      <div className="p-4 rounded-lg bg-gray-600 h-full overflow shadow-md">
         <h2 className="text-2xl font-semibold mb-4">Current Listings</h2>
         {listings.length === 0 ? (
           <p>No listings available.</p>
         ) : (
           <ul className="grid grid-cols-1 sm:grid-cols-3 lg:grid-row-4 gap-4">
-            {listings.map((listing) => (
-              <li
-                key={listing.id}
-                className="border bg-gray-800 text-white border-black rounded-lg p-2"
-              >
-                {" "}
-                {/* Reduced padding to make card smaller */}
-                <h3 className="text-lg font-semibold leading tight truncate">
-                  {listing.name}
-                </h3>
-                <img
-                  src={listing.imageUrl}
-                  alt={listing.name}
-                  className="w-1/2 my-2 mx-auto relative"
-                />
-                <p>{listing.description}</p>
-                <p>Category: {listing.category}</p>
-                <p>Price: ${listing.price}</p>
-                <p>Status: {listing.isVerified ? "Verified" : "Unverified"}</p>
-                <div className="flex justify-between mt-2"></div>
-                <div className="flex justify-between mt-2">
-                  <button
-                    onClick={() => handleVerify(listing.id, listing.category)}
-                    className={`text-green-500 font-medium ${
-                      listing.isVerified ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
-                    disabled={listing.isVerified}
-                  >
-                    Verify
-                  </button>
-                  <button
-                    onClick={() => handleDelete(listing.id)}
-                    className="text-red-500 font-medium"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
+            {listings
+              .sort((a, b) => a.isVerified - b.isVerified) // Sort: unverified first
+              .map((listing) => (
+                <li
+                  key={listing.id}
+                  className="border bg-white text-black text-sm border-black rounded-lg p-2"
+                >
+                  {/* Reduced padding to make card smaller */}
+                  <h3 className="text-lg font-semibold leading-tight truncate">
+                    {listing.name}
+                  </h3>
+                  <img
+                    src={listing.imageUrl}
+                    alt={listing.name}
+                    className="w-1/2 my-2 mx-auto"
+                  />
+
+                  <p>{listing.description}</p>
+                  <p>Category: {listing.category}</p>
+                  <p>Price: ${listing.price}</p>
+                  <p>
+                    Status: {listing.isVerified ? "Verified" : "Unverified"}
+                  </p>
+
+                  <div className=" flex justify-between">
+                    <button
+                      onClick={() => handleVerify(listing.id, listing.category)}
+                      className={`text-green-600 bottom-2 left-2 font-medium ${
+                        listing.isVerified
+                          ? "opacity-50 cursor-not-allowed"
+                          : ""
+                      }`}
+                      disabled={listing.isVerified}
+                    >
+                      {listing.isVerified ? "Verified" : "Verify"}
+                    </button>
+
+                    <button
+                      onClick={() => handleDelete(listing.id)}
+                      className="text-red-600 bottom-2 right-2 font-medium"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </li>
+              ))}
           </ul>
         )}
       </div>
