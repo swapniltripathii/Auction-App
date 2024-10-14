@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
+import Skeleton from "react-loading-skeleton"; // Import skeleton loader
+import "react-loading-skeleton/dist/skeleton.css"; // Import skeleton styles
 import { CiHeart } from "react-icons/ci";
 import { FaHeart } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { useAuth } from "../contexts/authContext/authcontext"; // Import the auth context
+import { useAuth } from "../contexts/authContext/authcontext";
 import {
   doc,
   setDoc,
@@ -10,15 +12,16 @@ import {
   updateDoc,
   arrayUnion,
   arrayRemove,
-} from "firebase/firestore"; // Firestore methods
-import { firestore } from "../firebase/firebase"; // Import your firebase setup
+} from "firebase/firestore";
+import { firestore } from "../firebase/firebase";
+import { motion } from "framer-motion";
 import "react-toastify/dist/ReactToastify.css";
 
-const Card = ({ product }) => {
+const Card = ({ product, isLoading }) => {
   const { currentUser } = useAuth();
   const [isLiked, setIsLiked] = useState(false);
+  const [hasClicked, setHasClicked] = useState(false);
 
-  // Check if the product is already in the user's favourites when the component mounts
   useEffect(() => {
     if (currentUser) {
       const fetchFavourites = async () => {
@@ -43,7 +46,6 @@ const Card = ({ product }) => {
     const userFavouritesRef = doc(firestore, "favourites", currentUser.uid);
 
     if (isLiked) {
-      // Remove from favourites in Firestore
       await updateDoc(userFavouritesRef, {
         products: arrayRemove({
           id: product.id,
@@ -54,7 +56,6 @@ const Card = ({ product }) => {
       });
       toast.warning("Product removed from favourites");
     } else {
-      // Add to favourites in Firestore
       await setDoc(
         userFavouritesRef,
         {
@@ -71,10 +72,27 @@ const Card = ({ product }) => {
     }
 
     setIsLiked(!isLiked);
+    setHasClicked(true);
   };
 
+  if (isLoading) {
+    return (
+      <div className="bg-black text-white p-4 rounded-lg shadow-lg max-w-xs">
+        <Skeleton height={150} />
+        <Skeleton width={100} />
+        <Skeleton width={80} />
+        <Skeleton circle={true} height={50} width={50} />
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-black text-white pt-4 pl-4 pr-4 pb-2 rounded-lg shadow-lg max-w-xs">
+    <motion.div
+      className="bg-black text-white p-4 rounded-lg shadow-lg max-w-xs"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="w-full h-44 flex justify-center items-center">
         <img
           src={product.imageUrl}
@@ -92,15 +110,32 @@ const Card = ({ product }) => {
           <p className="text-gray-400 text-md">Price</p>
           <p className="text-xl font-bold">${product.price}</p>
         </div>
-        <button onClick={likeHandler} className="p-2 rounded-full">
+        <motion.button
+          onClick={likeHandler}
+          whileTap={{ scale: 1.5 }}
+          transition={{ type: "spring", stiffness: 300, damping: 10 }}
+          className="p-2 rounded-full"
+        >
           {isLiked ? (
-            <FaHeart className="text-3xl text-red-700" />
+            <motion.div
+              initial={{ scale: 1 }}
+              animate={hasClicked ? { scale: 1 } : {}}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <FaHeart className="text-3xl text-red-700" />
+            </motion.div>
           ) : (
-            <CiHeart className="text-3xl" />
+            <motion.div
+              initial={{ scale: 1 }}
+              animate={hasClicked ? { scale: 1 } : {}}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <CiHeart className="text-3xl" />
+            </motion.div>
           )}
-        </button>
+        </motion.button>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
