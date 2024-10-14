@@ -7,22 +7,25 @@ import HomeLoggedIn from "./routes/HomeLoggedIn";
 import Home from "./routes/Home";
 import Sell from "./routes/Pages/Sell";
 import { AuthProvider } from "./contexts/authContext/authcontext";
-import PrivateRoute from "./components/PrivateRoute"; // Import the PrivateRoute component
+import PrivateRoute from "./components/PrivateRoute"; 
 import Shoes from "./routes/Shoes";
 import Collections from "./routes/Collections";
 import Clothes from "./routes/Clothes";
 import Profile from "./routes/Profile";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import ProfileLayout from "./components/ProfileLayouts";
 import Selling from "./routes/Pages/Selling";
 import Buying from "./routes/Pages/Buying";
 import Favourite from "./routes/Pages/Favourite";
+import 'react-toastify/dist/ReactToastify.css'; // Toastify CSS
 
 function App() {
   return (
     <div className="w-screen h-screen font-poppins overflow-x-hidden overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-300">
+      {/* Toast notifications */}
+      <ToastContainer />
+
       {/* Wrap everything in the AuthProvider */}
-      {/* <ToastContainer /> */}
       <AuthProvider>
         <BrowserRouter>
           <Routes>
@@ -34,7 +37,6 @@ function App() {
             <Route path="/apparels" element={<Clothes />} />
             <Route path="/collectibles" element={<Collections />} />
             <Route path="/profilelayouts" element={<ProfileLayout />} />
-            {/* <Route path="/demo" element={<Buy/>} /> */}
 
             {/* Protected Routes */}
             <Route
@@ -76,12 +78,12 @@ function App() {
                   <Buying />
                 </PrivateRoute>
               }
-              />
-              <Route
+            />
+            <Route
               path="/favourite"
               element={
                 <PrivateRoute>
-                  <Favourite/>
+                  <Favourite />
                 </PrivateRoute>
               }
             />
