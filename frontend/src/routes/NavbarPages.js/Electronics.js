@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import NavbarTop from "../components/shared/NavbarTop";
-import { useAuth } from "../contexts/authContext/authcontext";
-import Sneakers from "../components/categories/Sneakers";
-import axios from "axios";
+import NavbarTop from "../../components/shared/NavbarTop";
+import { useAuth } from "../../contexts/authContext/authcontext";
+import Electron from "../../components/categories/Electron";
 
-const Shoes = () => {
-  const { currentUser } = useAuth(); 
+const Electronics = () => {
+  const { currentUser } = useAuth();
 
   return (
     <div className="w-full h-full">
@@ -13,16 +12,16 @@ const Shoes = () => {
         <NavbarTop />
       </div>
       {/* Home content */}
-      <div className="w-full h-full p-4 bg-gray-200 overflow ">
+      <div className=" w-full h-full overflow p-4 bg-gray-200 ">
         <h1 className="text-black text-2xl">
           Welcome, {currentUser?.email || "User"}!
         </h1>
         <div className="pl-8 pr-8">
-          <Sneakers />
+          <Electron />
         </div>
       </div>
     </div>
   );
 };
 
-export default Shoes;
+export default Electronics;

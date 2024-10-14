@@ -78,11 +78,7 @@ const NavbarTop = () => {
                 />
               </motion.div>
             ) : (
-              <img
-                src={logo}
-                alt="BidRare Logo"
-                className="h-24 w-50"
-              />
+              <img src={logo} alt="BidRare Logo" className="h-24 w-50" />
             )}
           </Link>
         </div>
@@ -97,7 +93,7 @@ const NavbarTop = () => {
           <Link to="/about" className="text-gray-900 px-1 text-xl font-medium">
             About
           </Link>
-          <Link to="/help" className="text-gray-900 px-1 text-xl font-medium">
+          <Link to="/admin" className="text-gray-900 px-1 text-xl font-medium">
             Help
           </Link>
           <Link to="/sell" className="text-gray-900 px-2 text-xl font-medium">
@@ -145,6 +141,12 @@ const NavbarTop = () => {
         </Link>
         <Link to="/shoes" className="nav-link">
           Sneakers
+        </Link>
+        <Link to="/electronics" className="nav-link">
+          Electronics
+        </Link>
+        <Link to="/accessories" className="nav-link">
+          Accessories
         </Link>
         <Link to="/collectibles" className="nav-link">
           Collectibles
