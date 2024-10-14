@@ -151,7 +151,7 @@ const ProfileLayout = ({ children }) => {
 
             {/* Log Out */}
             <Link
-              to="/logout"
+              to="/admin"
               className={`flex items-center space-x-4 p-4 w-full rounded-md ${
                 isActive("/logout") ? "bg-white" : "hover:bg-white"
               }`}

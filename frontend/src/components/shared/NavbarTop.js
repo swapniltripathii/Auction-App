@@ -93,7 +93,7 @@ const NavbarTop = () => {
           <Link to="/about" className="text-gray-900 px-1 text-xl font-medium">
             About
           </Link>
-          <Link to="/admin" className="text-gray-900 px-1 text-xl font-medium">
+          <Link to="/help" className="text-gray-900 px-1 text-xl font-medium">
             Help
           </Link>
           <Link to="/sell" className="text-gray-900 px-2 text-xl font-medium">
