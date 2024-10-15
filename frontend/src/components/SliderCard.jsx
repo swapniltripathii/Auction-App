@@ -5,8 +5,9 @@ import "swiper/css";
 import "swiper/css/pagination";
 
 import banner1 from "../assets/images/banner1.jpg"; // Adjust the path as necessary
-import banner2 from '../assets/images/banner2.jpeg'
-import banner3 from '../assets/images/banner3.png'
+import banner2 from '../assets/images/banner2.jpeg';
+import banner3 from '../assets/images/banner3.png';
+import bannervid from '../assets/bannervid.mp4';
 
 const SliderCard = () => {
   return (
@@ -17,14 +18,19 @@ const SliderCard = () => {
         spaceBetween={30}
         slidesPerView={1}
         className="swiper progress-slide-carousel"
-        autoplay={{ delay: 3000, disableOnInteraction: false }} 
+        autoplay={{ 
+          delay: 7000, // Set delay to 4000ms to match video length
+          disableOnInteraction: false 
+        }} 
       >
         <SwiperSlide>
           <div className="bg-indigo-50 rounded-2xl h-96 w-full flex justify-center items-center">
-          <img 
-              className="object-cover w-full h-full rounded-2xl" 
-              src={banner2} 
-              alt="Slide 2" 
+            <video 
+              src={bannervid} 
+              autoPlay 
+              loop 
+              muted // Mute the video for autoplay without sound issues
+              className="object-cover w-full h-full rounded-2xl"
             />
           </div>
         </SwiperSlide>
@@ -39,8 +45,8 @@ const SliderCard = () => {
         </SwiperSlide>
         <SwiperSlide>
           <div className="bg-indigo-50 rounded-2xl h-96 w-full flex justify-center items-center">
-          <img 
-              className="object-cover w-full h-full b-25 rounded-2xl" 
+            <img 
+              className="object-cover w-full h-full rounded-2xl" 
               src={banner3} 
               alt="Slide 3" 
             />

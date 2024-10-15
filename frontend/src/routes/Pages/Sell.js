@@ -173,6 +173,8 @@ export default function Sell() {
       "TWS",
       "Controller",
       "Console",
+      "VR headset",
+      'Speaker',
     ],
   };
 
