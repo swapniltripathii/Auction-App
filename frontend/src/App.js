@@ -24,6 +24,7 @@ import Favourite from "./routes/Pages/Favourite";
 import "react-toastify/dist/ReactToastify.css"; // Toastify CSS
 import 'react-toastify/dist/ReactToastify.css'; // Toastify CSS
 import About from "./routes/Pages/About";
+import Help from "./routes/Pages/Help";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/shoes" element={<Shoes />} />
             <Route path="/about" element={<About/>} />
+            <Route path="/help" element={<Help/>} />
             <Route path="/apparels" element={<Clothes />} />
             <Route path="/collectibles" element={<Collections />} />
             <Route path="/accessories" element={<Accessories />} />
