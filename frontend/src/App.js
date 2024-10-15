@@ -22,9 +22,9 @@ import Selling from "./routes/Pages/Selling";
 import Buying from "./routes/Pages/Buying";
 import Favourite from "./routes/Pages/Favourite";
 import "react-toastify/dist/ReactToastify.css"; // Toastify CSS
-import 'react-toastify/dist/ReactToastify.css'; // Toastify CSS
 import About from "./routes/Pages/About";
 import Help from "./routes/Pages/Help";
+import ProductDetail from "./components/ProductDetail";
 
 function App() {
   return (
@@ -41,13 +41,14 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/shoes" element={<Shoes />} />
-            <Route path="/about" element={<About/>} />
-            <Route path="/help" element={<Help/>} />
+            <Route path="/about" element={<About />} />
+            <Route path="/help" element={<Help />} />
             <Route path="/apparels" element={<Clothes />} />
             <Route path="/collectibles" element={<Collections />} />
             <Route path="/accessories" element={<Accessories />} />
             <Route path="/electronics" element={<Electronics />} />
             <Route path="/profilelayouts" element={<ProfileLayout />} />
+            <Route path="/product/:productId" element={<ProductDetail />} /> {/* Corrected here */}
 
             {/* Protected Routes */}
             <Route

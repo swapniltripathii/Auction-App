@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Skeleton from "react-loading-skeleton"; // Import skeleton loader
-import "react-loading-skeleton/dist/skeleton.css"; // Import skeleton styles
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import { CiHeart } from "react-icons/ci";
 import { FaHeart } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -15,6 +15,7 @@ import {
 } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom"; // Import Link for navigation
 import "react-toastify/dist/ReactToastify.css";
 
 const Card = ({ product, isLoading }) => {
@@ -88,23 +89,27 @@ const Card = ({ product, isLoading }) => {
 
   return (
     <motion.div
-      className="bg-black text-white p-4 rounded-lg shadow-lg max-w-xs"
+      className="bg-black text-white p-3 rounded-xl shadow-lg max-w-xs"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="w-full h-44 flex justify-center items-center">
-        <img
-          src={product.imageUrl}
-          alt={product.name}
-          className="w-full h-48 mt-2 object-contain bg-white rounded-lg"
-        />
-      </div>
-      <div className="mt-5 h-6">
-        <h3 className="text-lg font-semibold leading-tight truncate">
-          {product.name}
-        </h3>
-      </div>
+      {/* Wrap this part in a Link to navigate to the product detail page */}
+      <Link to={`/product/${product.id}`}>
+        <div className="w-full h-36 flex justify-center items-center">
+          <img
+            src={product.imageUrl}
+            alt={product.name}
+            className="w-full h-36 object-contain bg-white rounded-xl"
+          />
+        </div>
+        <div className="mt-3">
+          <h3 className="text-md font-semibold leading-tight truncate">
+            {product.name}
+          </h3>
+        </div>
+      </Link>
+
       <div className="flex justify-between items-center">
         <div>
           <p className="text-gray-400 text-md">Price</p>
@@ -114,7 +119,7 @@ const Card = ({ product, isLoading }) => {
           onClick={likeHandler}
           whileTap={{ scale: 1.5 }}
           transition={{ type: "spring", stiffness: 300, damping: 10 }}
-          className="p-2 rounded-full"
+          className="pt-3 pr-2 rounded-full"
         >
           {isLiked ? (
             <motion.div

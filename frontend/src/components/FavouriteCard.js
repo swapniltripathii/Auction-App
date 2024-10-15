@@ -78,7 +78,7 @@ const FavouriteCard = ({ product }) => {
         <img
           src={product.imageUrl}
           alt={product.name}
-          className="w-24 h-24 object-contain bg-gray-100 rounded-md"
+          className="w-24 h-24 object-contain rounded-md"
         />
 
         {/* Heart Icon - for like/unlike */}

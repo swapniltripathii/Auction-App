@@ -5,8 +5,8 @@ import Apparels from "../components/categories/Apparels";
 import Collectibles from "../components/categories/Collectibles";
 import Sneakers from "../components/categories/Sneakers";
 import axios from "axios";
-// import localImage from "../assets/images/banner1.jg"; // Import the local image
-// import localImage2 from "../assets/images/banner2.webp";
+import localImage from "../assets/images/banner_1.png"; // Import the local image
+import localImage2 from "../assets/images/banner_2.webp";
 import SliderCard from "../components/SliderCard";
 import Footer from "../components/Footer";
 import Accessory from "../components/categories/Accessory";
@@ -28,12 +28,16 @@ const HomeLoggedIn = () => {
         </h1>
 
         {/* Product Listings Grid */}
-        <div className="pl-8 pr-8">
+        <div className="pl-16 pr-16">
+          <div className="pt-1 pl-4 text-2xl font-semibold">Apparels</div>
           <Apparels />
-          {/* Local Image */}
-          {/* <div className="my-4 flex justify-center rounded-2xl">
+          <SliderCard />
+          <div className="pt-1 pl-4 text-2xl font-semibold">Sneakers</div>
+          <Sneakers />
+          <div className="pt-1 pl-4 text-2xl font-semibold">Accessories</div>
+          <Accessory />
+          <div className="my-4 flex justify-center rounded-2xl">
             <img
-            
               src={localImage}
               alt="Local"
               className="w-auto item-center  rounded-3xl h-auto"
@@ -43,13 +47,11 @@ const HomeLoggedIn = () => {
               alt="Local"
               className="w-auto item-center ml-10 rounded-3xl  h-auto"
             />
-          </div> */}
-          <SliderCard />
-          <Sneakers />
-          <Accessory/>
+          </div>
+          <div className="pt-1 pl-4 text-2xl font-semibold">Collectibles</div>
           <Collectibles />
-          <Electron/>
-
+          <div className="pt-1 pl-4 text-2xl font-semibold">Electronics</div>
+          <Electron />
         </div>
       </div>
       <Footer />

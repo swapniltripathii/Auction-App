@@ -60,7 +60,7 @@ const Selling = () => {
                   key={listing.id}
                   className="border bg-white text-black border-gray-300 rounded-lg p-2 text-sm shadow-md"
                 >
-                  <h3 className="text-lg font-semibold truncate">
+                  <h3 className="text-lg font-semibold leading-tight truncate">
                     {listing.name}
                   </h3>
                   <img

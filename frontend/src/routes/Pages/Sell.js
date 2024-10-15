@@ -70,28 +70,42 @@ export default function Sell() {
   }, [db, auth.currentUser.uid]);
 
   const handleVerify = async (id, category) => {
+    // Get the current logged-in user's ID
     const userId = auth.currentUser.uid;
+  
+    // Reference to the specific product in the 'products' collection in Firestore
     const listingRef = doc(db, "products", id);
+  
+    // Retrieve the document snapshot for the specific product
     const listingSnapshot = await getDoc(listingRef);
-
+  
+    // Check if the product exists in Firestore
     if (listingSnapshot.exists()) {
+      // Get the product data
       const listingData = listingSnapshot.data();
-
+  
+      // Check if the current user is the owner of the product
       if (listingData.userId === userId) {
+        // If the user is the owner, update the 'isVerified' field to true
         await updateDoc(listingRef, { isVerified: true });
-
+  
+        // Reference to the new collection (category) where the product will be moved
         const categoryRef = collection(db, category);
+  
+        // Add the product to the specific category collection with 'isVerified' set to true
         await addDoc(categoryRef, {
-          ...listingData,
-          isVerified: true,
+          ...listingData, // Spread the original product data
+          isVerified: true, // Ensure the 'isVerified' flag is true
         });
-
+  
         console.log("Product verified and moved to category collection.");
       } else {
+        // Log an error if the current user is not the owner of the product
         console.error("You can only verify your own listings.");
       }
     }
   };
+  
 
   const handleDelete = async (id) => {
     console.log("Attempting to delete product with ID:", id);
