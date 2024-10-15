@@ -137,11 +137,43 @@ export default function Sell() {
 
   // Subcategories based on category selection
   const subcategories = {
-    sneakers: ["Running", "Casual","Sneakers", "Basketball", "Sliders","Skate","Football" ],
-    apparels: ["T-shirt", "Jersey", "Jacket","Hoodies & Sweatshirts","Joggers","Pants"],
-    collectibles: ["Action Figures", "Vintage Items", "Memorabilia","Painting","Cards","Toys","Antiques"],
-    accessories: ["Bags", "Caps","Watches","Sunglasses"],
-    electronics: ["Mobile Phones", "Laptops", "Cameras","GPUs","Headphones","TWS"],
+    sneakers: [
+      "Running",
+      "Casual",
+      "Sneakers",
+      "Basketball",
+      "Sliders",
+      "Skate",
+      "Football",
+    ],
+    apparels: [
+      "T-shirt",
+      "Jersey",
+      "Jacket",
+      "Hoodies & Sweatshirts",
+      "Joggers",
+      "Pants",
+    ],
+    collectibles: [
+      "Action Figures",
+      "Vintage Items",
+      "Memorabilia",
+      "Painting",
+      "Cards",
+      "Toys",
+      "Antiques",
+    ],
+    accessories: ["Bags", "Caps", "Watches", "Sunglasses"],
+    electronics: [
+      "Mobile Phones",
+      "Laptops",
+      "Cameras",
+      "GPUs",
+      "Headphones",
+      "TWS",
+      "Controller",
+      "Console",
+    ],
   };
 
   return (

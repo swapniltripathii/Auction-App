@@ -48,7 +48,7 @@ const AdminPanel = () => {
     <div className="admin-panel p-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
       <div>
         <h1 className="text-2xl font-bold mb-2">Admin Panel</h1>
-        <h2 className="text-xl mb-4">{adminName}</h2> {/* Display admin name */}
+        <h2 className="text-xl font-md mb-4">Swapnil Tripathi</h2> {/* Display admin name */}
         <div className="users-list grid grid-cols-1 gap-4"> {/* Use grid for users list */}
           {users.map((user) => (
             <div
