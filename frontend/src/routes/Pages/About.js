@@ -1,7 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const About = () => {
+  const navigate = useNavigate(); // Initialize navigate for routing
+
   return (
     <section className="bg-gray-100 py-16 px-6 lg:px-20 text-center">
       <div className="max-w-5xl mx-auto">
@@ -65,10 +68,15 @@ const About = () => {
           Join us today and experience the thrill of online auctions, where every bid could lead to your next great find!
         </p>
 
-        {/* Call to Action */}
-        <button className="mt-6 bg-indigo-600 text-white px-6 py-3 rounded-full hover:bg-indigo-700 transition duration-300">
+        {/* Call to Action - Animated Button */}
+        <motion.button
+          whileHover={{ scale: 1.1, backgroundColor: "#4F46E5" }} // Scale and color change on hover
+          whileTap={{ scale: 0.95 }} // Small scale on click
+          className="mt-6 bg-indigo-700 text-white px-6 py-3 rounded-full hover:bg-indigo-800 transition duration-300"
+          onClick={() => navigate('/home')} // Navigate to /home on click
+        >
           Explore Auctions
-        </button>
+        </motion.button>
       </div>
     </section>
   );
