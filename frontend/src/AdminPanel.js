@@ -6,6 +6,7 @@ const AdminPanel = () => {
   const [users, setUsers] = useState([]);
   const [products, setProducts] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null); // State to track selected user
+  const [adminName, setAdminName] = useState("Admin"); // State for admin name
 
   useEffect(() => {
     const fetchUsersAndProducts = async () => {
@@ -35,31 +36,20 @@ const AdminPanel = () => {
   };
 
   const deleteProduct = async (productId) => {
-    // Find the product to get its category
-    const productToDelete = products.find((product) => product.id === productId);
-    
-    if (productToDelete) {
-      // Delete from the products collection
-      await deleteDoc(doc(firestore, 'products', productId));
-      
-      // Delete from the corresponding category collection
-      await deleteDoc(doc(firestore, productToDelete.category, productId));
-      
-      // Update state to remove the product
-      setProducts((prevProducts) => prevProducts.filter((product) => product.id !== productId));
-    }
+    await deleteDoc(doc(firestore, 'products', productId));
+    setProducts((prevProducts) => prevProducts.filter((product) => product.id !== productId));
   };
-  
 
   const handleUserClick = (userId) => {
     setSelectedUserId(userId); // Set the selected user ID
   };
 
   return (
-    <div className="admin-panel p-4">
-      <h1 className="text-2xl font-bold mb-4">Admin Panel</h1>
-      {!selectedUserId ? ( // Show user list if no user is selected
-        <div className="users-list grid grid-cols-3 gap-4">
+    <div className="admin-panel p-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div>
+        <h1 className="text-2xl font-bold mb-2">Admin Panel</h1>
+        <h2 className="text-xl mb-4">{adminName}</h2> {/* Display admin name */}
+        <div className="users-list grid grid-cols-1 gap-4"> {/* Use grid for users list */}
           {users.map((user) => (
             <div
               key={user.id}
@@ -71,48 +61,54 @@ const AdminPanel = () => {
             </div>
           ))}
         </div>
-      ) : ( // Show products of the selected user
-        <div>
-          <button onClick={() => setSelectedUserId(null)} className="mb-4 text-blue-500">
-            Back to Users
-          </button>
-          <h2 className="text-2xl font-bold mb-4">{`${users.find(user => user.id === selectedUserId)?.firstName}'s Products`}</h2>
-          <div className="products-list grid grid-cols-1 sm:grid-cols-3 lg:grid-row-4 gap-4">
-            {products
-              .filter((product) => product.userId === selectedUserId)
-              .slice(0, 10) // Limit to 3 products
-              .map((product) => (
-                <div key={product.id} className="product-card border p-2 flex flex-col items-start mb-2">
-                  {product.imageUrl && (
-                    <img src={product.imageUrl} alt={product.name} className="w-24 h-24 object-cover mb-2" />
-                  )}
-                  <h3 className="text-lg">{product.name}</h3>
-                  <p>{product.category}</p>
-                  <p>{product.subcategory}</p>
-                  <p className="font-bold">{`Price: $${product.price}`}</p> {/* Display product price */}
-                  <div className="flex space-x-2 mt-2">
-                    {!product.verified && (
-                      <button
-                        onClick={() => verifyProduct(product.id)}
-                        className="bg-green-500 text-white px-2 py-1"
-                      >
-                        Verify
-                      </button>
+      </div>
+
+      <div>
+        {selectedUserId ? ( // Show products of the selected user
+          <div>
+            <button onClick={() => setSelectedUserId(null)} className="mb-4 text-blue-500">
+              Back to Users
+            </button>
+            <h2 className="text-2xl font-bold mb-4">{`${users.find(user => user.id === selectedUserId)?.firstName}'s Products`}</h2>
+            <div className="products-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {products
+                .filter((product) => product.userId === selectedUserId)
+                .slice(0, 10) // Limit to 10 products
+                .map((product) => (
+                  <div key={product.id} className="product-card border p-2 flex flex-col bg-green-300 items-start mb-2">
+                    {product.imageUrl && (
+                      <img src={product.imageUrl} alt={product.name} className="w-24 h-24 object-cover mb-2" />
                     )}
-                    <button
-                      onClick={() => deleteProduct(product.id)}
-                      className="bg-red-500 text-white px-2 py-1"
-                    >
-                      Delete
-                    </button>
+                    <h3 className="text-sm truncate">{product.name}</h3>
+                    <p>{product.category}</p>
+                    <p>{product.subcategory}</p>
+                    <p className="font-bold">{`Price: $${product.price}`}</p> {/* Display product price */}
+                    <div className="flex space-x-2 mt-2">
+                      {!product.verified && (
+                        <button
+                          onClick={() => verifyProduct(product.id)}
+                          className="bg-green-500 text-white px-2 py-1"
+                        >
+                          Verify
+                        </button>
+                      )}
+                      <button
+                        onClick={() => deleteProduct(product.id)}
+                        className="bg-red-500 text-white px-2 py-1"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+            </div>
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="text-gray-500">Select a user to view their products.</div> // Message when no user is selected
+        )}
+      </div>
     </div>
   );
 };
 
-export default AdminPanel;
+export default AdminPanel;  

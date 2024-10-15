@@ -9,6 +9,8 @@ import axios from "axios";
 // import localImage2 from "../assets/images/banner2.webp";
 import SliderCard from "../components/SliderCard";
 import Footer from "../components/Footer";
+import Accessory from "../components/categories/Accessory";
+import Electron from "../components/categories/Electron";
 const HomeLoggedIn = () => {
   const { currentUser } = useAuth();
 
@@ -21,8 +23,8 @@ const HomeLoggedIn = () => {
 
       {/* Home content */}
       <div className="w-full p-4 bg-gray-200">
-        <h1 className="text-black text-2xl">
-          Welcome, {currentUser?.email || "User"}!
+        <h1 className="text-black text-2xl font-sansi text-semibold">
+          Welcome, {currentUser?.displayName || "User"}
         </h1>
 
         {/* Product Listings Grid */}
@@ -43,8 +45,11 @@ const HomeLoggedIn = () => {
             />
           </div> */}
           <SliderCard />
-          <Collectibles />
           <Sneakers />
+          <Accessory/>
+          <Collectibles />
+          <Electron/>
+
         </div>
       </div>
       <Footer />

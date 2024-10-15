@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import Apparels from "../components/categories/Apparels";
 import Collectibles from "../components/categories/Collectibles";
 import Sneakers from "../components/categories/Sneakers";
+import Accessory from "../components/categories/Accessory";
+import Electron from "../components/categories/Electron";
 // import localImage from "../assets/images/banner1.webp";
 // import localImage2 from "../assets/images/banner2.webp";
 import logo from "../assets/images/logo.png";
@@ -61,12 +63,18 @@ const Home = () => {
         </div>
 
         {/* Bottom Navbar */}
-        <div className="fixed top-24 flex w-full justify-center items-center p-2 bg-gray-100 border-t border-b border-gray-300">
+        <div className="fixed z-50 top-24 flex w-full justify-center items-center p-2 bg-blue-100 border-t border-b border-gray-300">
           <Link to="/apparels" className="nav-link">
             Apparels
           </Link>
           <Link to="/shoes" className="nav-link">
             Sneakers
+          </Link>
+          <Link to="/electronics" className="nav-link">
+            Electronics
+          </Link>
+          <Link to="/accessories" className="nav-link">
+            Accessories
           </Link>
           <Link to="/collectibles" className="nav-link">
             Collectibles
@@ -77,7 +85,6 @@ const Home = () => {
         <div className="p-4 mt-0 bg-gray-200">
           <div className="mt-36 pl-8 pr-8">
             <Apparels />
-
             <SliderCard />
             {/* <img
                 src={localImage}
@@ -89,9 +96,10 @@ const Home = () => {
                 alt="Local Banner 2"
                 className="w-auto item-center ml-16 rounded-3xl h-auto mx-2"
               /> */}
-
-            <Collectibles />
             <Sneakers />
+            <Accessory />
+            <Electron />
+            <Collectibles />
           </div>
         </div>
         <Footer />
