@@ -17,7 +17,7 @@ export default function Sell() {
   const [productName, setProductName] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [category, setCategory] = useState("sneakers");
-  const [subcategory, setSubcategory] = useState(""); // New state for subcategory
+  const [subcategory, setSubcategory] = useState("");
   const [price, setPrice] = useState("");
   const [listings, setListings] = useState([]);
 
@@ -33,17 +33,17 @@ export default function Sell() {
         userId,
         name: productName,
         category,
-        subcategory, // Now including subcategory
+        subcategory,
         price: parseFloat(price),
         imageUrl,
         isVerified: false,
         isliked: false,
       });
 
-      // Clear the form fields
+      
       setProductName("");
       setCategory("sneakers");
-      setSubcategory(""); // Reset the subcategory
+      setSubcategory("");
       setPrice("");
       setImageUrl("");
     } catch (error) {
@@ -72,32 +72,25 @@ export default function Sell() {
   const handleVerify = async (id, category) => {
     // Get the current logged-in user's ID
     const userId = auth.currentUser.uid;
-  
     // Reference to the specific product in the 'products' collection in Firestore
     const listingRef = doc(db, "products", id);
-  
     // Retrieve the document snapshot for the specific product
     const listingSnapshot = await getDoc(listingRef);
-  
     // Check if the product exists in Firestore
     if (listingSnapshot.exists()) {
       // Get the product data
       const listingData = listingSnapshot.data();
-  
       // Check if the current user is the owner of the product
       if (listingData.userId === userId) {
         // If the user is the owner, update the 'isVerified' field to true
         await updateDoc(listingRef, { isVerified: true });
-  
         // Reference to the new collection (category) where the product will be moved
         const categoryRef = collection(db, category);
-  
         // Add the product to the specific category collection with 'isVerified' set to true
         await addDoc(categoryRef, {
           ...listingData, // Spread the original product data
           isVerified: true, // Ensure the 'isVerified' flag is true
         });
-  
         console.log("Product verified and moved to category collection.");
       } else {
         // Log an error if the current user is not the owner of the product
@@ -149,7 +142,6 @@ export default function Sell() {
     }
   };
 
-  // Subcategories based on category selection
   const subcategories = {
     sneakers: [
       "Running",
@@ -224,7 +216,7 @@ export default function Sell() {
               value={category}
               onChange={(e) => {
                 setCategory(e.target.value);
-                setSubcategory(""); // Reset subcategory when category changes
+                setSubcategory("");
               }}
               required
               className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
@@ -323,16 +315,15 @@ export default function Sell() {
                   key={listing.id}
                   className="border bg-white text-black text-sm border-black rounded-lg p-2"
                 >
-                  <h3 className="text-lg font-semibold leading-tight truncate">
+                  <h3 className="text-md font-semibold leading-tight truncate">
                     {listing.name}
                   </h3>
                   <img
                     src={listing.imageUrl}
                     alt={listing.name}
-                    className="w-1/2 my-2 mx-auto"
+                    className="w-1/2 h-24 my-2 mx-auto"
                   />
                   <p>Subcategory: {listing.subcategory}</p>{" "}
-                  {/* Display subcategory */}
                   <p>Category: {listing.category}</p>
                   <p>Price: ${listing.price}</p>
                   <p>
