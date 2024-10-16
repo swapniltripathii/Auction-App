@@ -4,7 +4,6 @@ import { useAuth } from "../contexts/authContext/authcontext"; // Import useAuth
 import Apparels from "../components/categories/Apparels";
 import Collectibles from "../components/categories/Collectibles";
 import Sneakers from "../components/categories/Sneakers";
-import axios from "axios";
 import localImage from "../assets/images/banner_1.png"; // Import the local image
 import localImage2 from "../assets/images/banner_2.webp";
 import SliderCard from "../components/SliderCard";
