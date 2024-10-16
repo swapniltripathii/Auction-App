@@ -64,6 +64,7 @@ const ProductDetail = () => {
       <div className="fixed top-0 left-0 w-full z-10">
         <NavbarTop />
       </div>
+      {/* Content: Add padding-top to prevent initial overlap */}
       <div className="flex justify-center items-center pb-20 relative pt-52">
         {/* Product Card */}
         <div className="flex flex-col w-1/2 p-8  bg-gray-900 text-white rounded-2xl border border-black shadow-2xl">
@@ -76,7 +77,7 @@ const ProductDetail = () => {
                 <img
                   src={product.imageUrl}
                   alt={product.name}
-                  className="w-full h-full rounded-2xl "
+                  className="w-96 h-96 object-contain bg-white rounded-2xl "
                 />
               </div>
             </div>

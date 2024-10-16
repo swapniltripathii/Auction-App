@@ -7,6 +7,8 @@ import {
   updateDoc,
   deleteDoc,
   doc,
+  getDoc,
+  setDoc,
 } from "firebase/firestore";
 
 const AdminPanel = () => {
@@ -27,17 +29,17 @@ const AdminPanel = () => {
     fetchUsersAndProducts();
 
     // Real-time listener for new products
-    const unsubscribe = onSnapshot(collection(firestore, "products"), (snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === "added") {
-          const newProduct = { id: change.doc.id, ...change.doc.data() };
-          setProducts((prevProducts) => [...prevProducts, newProduct]);
-
-          // Notify the admin when a new product is added
-          alert(`New product added by user: ${newProduct.userId} - ${newProduct.name}`);
-        }
-      });
-    });
+    const unsubscribe = onSnapshot(
+      collection(firestore, "products"),
+      (snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === "added") {
+            const newProduct = { id: change.doc.id, ...change.doc.data() };
+            setProducts((prevProducts) => [...prevProducts, newProduct]);
+          }
+        });
+      }
+    );
 
     // Cleanup the listener when the component unmounts
     return () => unsubscribe();
@@ -49,8 +51,22 @@ const AdminPanel = () => {
     return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   };
 
-  const verifyProduct = async (productId) => {
-    await updateDoc(doc(firestore, "products", productId), { verified: true });
+  const verifyProduct = async (productId, category) => {
+    const productRef = doc(firestore, "products", productId);
+
+    // Update product verification status
+    await updateDoc(productRef, { verified: true });
+
+    // Add product to the corresponding collection (e.g., apparels, sneakers)
+    const categoryCollectionRef = collection(firestore, category);
+    const productData = (await getDoc(productRef)).data();
+
+    await setDoc(doc(categoryCollectionRef, productId), {
+      ...productData,
+      verified: true,
+    });
+
+    // Update UI
     setProducts((prevProducts) =>
       prevProducts.map((product) =>
         product.id === productId ? { ...product, verified: true } : product
@@ -81,7 +97,7 @@ const AdminPanel = () => {
               onClick={() => handleUserClick(user.id)}
             >
               <h2 className="text-xl text-black font-semibold">{`${user.firstName} ${user.lastName}`}</h2>
-              <p className="text-black">{user.email}</p>
+              {/* <p className="text-black">{user.email}</p> */}
             </div>
           ))}
         </div>
@@ -119,7 +135,9 @@ const AdminPanel = () => {
                     <div className="flex space-x-4 item center justify-center mt-1">
                       {!product.verified && (
                         <button
-                          onClick={() => verifyProduct(product.id)}
+                          onClick={() =>
+                            verifyProduct(product.id, product.category)
+                          }
                           className="bg-green-500 rounded-xl text-white px-1 py-1"
                         >
                           Verify
