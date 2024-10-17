@@ -54,8 +54,7 @@ const AdminPanel = () => {
   const verifyProduct = async (productId, category) => {
     const productRef = doc(firestore, "products", productId);
 
-    // Update product verification status
-    await updateDoc(productRef, { verified: true });
+    await updateDoc(productRef, { verified: true }); // This will update the correct field
 
     // Add product to the corresponding collection (e.g., apparels, sneakers)
     const categoryCollectionRef = collection(firestore, category);
@@ -74,11 +73,21 @@ const AdminPanel = () => {
     );
   };
 
-  const deleteProduct = async (productId) => {
-    await deleteDoc(doc(firestore, "products", productId));
-    setProducts((prevProducts) =>
-      prevProducts.filter((product) => product.id !== productId)
-    );
+  const deleteProduct = async (productId, category) => {
+    try {
+      // Delete the product from the 'products' collection
+      await deleteDoc(doc(firestore, "products", productId));
+
+      // Delete the product from the respective category collection
+      await deleteDoc(doc(firestore, category, productId));
+
+      // Update the UI to reflect the deletion
+      setProducts((prevProducts) =>
+        prevProducts.filter((product) => product.id !== productId)
+      );
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
   };
 
   const handleUserClick = (userId) => {
@@ -109,50 +118,69 @@ const AdminPanel = () => {
             <h2 className="text-2xl font-semibold mb-1">{`${
               users.find((user) => user.id === selectedUserId)?.firstName
             }'s Products`}</h2>
-            <div className="products-list grid w-full pr-4 pb-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
-              {products
-                .filter((product) => product.userId === selectedUserId)
-                .slice(0, 15) // Limit to 15 products
-                .map((product) => (
-                  <div
-                    key={product.id}
-                    className="product-card border border-black p-2 flex flex-col rounded-2xl items-start"
-                  >
-                    {product.imageUrl && (
-                      <img
-                        src={product.imageUrl}
-                        alt={product.name}
-                        className="w-full h-24 object-contain bg-white rounded-xl mb-1"
-                      />
-                    )}
-                    <h3 className="text-md font-semibold leading-tight truncate">
-                      {product.name.length > 15
-                        ? `${product.name.slice(0, 15)}...`
-                        : product.name}
-                    </h3>
-                    <p className="text-sm">{product.category}</p>
-                    <p className="font-semibold">{`Price: $${product.price}`}</p>
-                    <div className="flex space-x-4 item center justify-center mt-1">
-                      {!product.verified && (
+
+            {/* Filter products by selected user */}
+            {products.filter((product) => product.userId === selectedUserId)
+              .length === 0 ? (
+              <div className="text-gray-600 text-lg font-medium">
+                No products listed.
+              </div>
+            ) : (
+              <div className="products-list grid w-full pr-4 pb-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+                {products
+                  .filter((product) => product.userId === selectedUserId)
+                  .slice(0, 15) // Limit to 15 products
+                  .map((product) => (
+                    <div
+                      key={product.id}
+                      className="product-card border bg-white border-black p-2 flex flex-col rounded-2xl items-start"
+                    >
+                      {product.imageUrl && (
+                        <img
+                          src={product.imageUrl}
+                          alt={product.name}
+                          className="w-full h-24 object-contain bg-white rounded-xl mb-1"
+                        />
+                      )}
+                      <h3 className="text-md font-semibold truncate">
+                        {product.name.length > 15
+                          ? `${product.name.slice(0, 15)}...`
+                          : product.name}
+                      </h3>
+                      <p className="text-sm">{product.category}</p>
+                      <p className="font-semibold">{`Price: $${product.price}`}</p>
+
+                      <div className="flex space-x-12 justify-between">
+                        {!product.verified ? (
+                          <button
+                            onClick={() =>
+                              verifyProduct(product.id, product.category)
+                            }
+                            className="text-blue-600 bottom-2 left-2 font-medium"
+                          >
+                            Verify
+                          </button>
+                        ) : (
+                          <button
+                            disabled
+                            className="text-blue-600 bottom-2 opacity-75 left-2 font-medium cursor-not-allowed"
+                          >
+                            Verified
+                          </button>
+                        )}
                         <button
                           onClick={() =>
-                            verifyProduct(product.id, product.category)
+                            deleteProduct(product.id, product.category)
                           }
-                          className="bg-green-500 rounded-xl text-white px-1 py-1"
+                          className="text-red-600 bottom-2 right-2 font-medium"
                         >
-                          Verify
+                          Delete
                         </button>
-                      )}
-                      <button
-                        onClick={() => deleteProduct(product.id)}
-                        className="bg-red-500 rounded-xl text-white px-1 py-1"
-                      >
-                        Delete
-                      </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
-            </div>
+                  ))}
+              </div>
+            )}
           </div>
         ) : (
           <div className="text-black text-lg font-semibold">

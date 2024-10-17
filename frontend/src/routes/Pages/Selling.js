@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   getFirestore,
   collection,
   onSnapshot,
   doc,
-  deleteDoc,
-  getDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { useAuth } from "../../contexts/authContext/authcontext";
 import ProfileLayout from "../../components/ProfileLayouts";
@@ -14,8 +14,17 @@ import { getAuth } from "firebase/auth";
 const Selling = () => {
   const { currentUser } = useAuth();
   const [listings, setListings] = useState([]);
+  const [filteredStatus, setFilteredStatus] = useState("current");
   const db = getFirestore();
   const auth = getAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    const status = query.get("status") || "current";
+    setFilteredStatus(status);
+  }, [location]);
 
   useEffect(() => {
     if (currentUser) {
@@ -32,58 +41,175 @@ const Selling = () => {
     }
   }, [db, auth.currentUser, currentUser]);
 
-  const handleDelete = async (id) => {
+  const handleSell = async (id, highestBid) => {
     try {
       const productRef = doc(db, "products", id);
-      await deleteDoc(productRef);
+      await updateDoc(productRef, {
+        isSold: true,
+        verified: false, // Move to pending
+        salePrice: highestBid,
+        saleDate: new Date().toISOString(), // Mark the sale date
+      });
       setListings((prevListings) =>
         prevListings.filter((product) => product.id !== id)
       );
     } catch (error) {
-      console.error("Error deleting product:", error);
+      console.error("Error updating product status:", error);
     }
   };
+
+  const filterListingsByStatus = (status) => {
+    switch (status) {
+      case "pending":
+        return listings.filter(
+          (listing) => !listing.verified && listing.isSold
+        );
+      case "history":
+        return listings.filter((listing) => listing.isSold);
+      default:
+        return listings.filter(
+          (listing) => listing.verified && !listing.isSold
+        );
+    }
+  };
+
+  const handleTabChange = (status) => {
+    navigate(`/selling?status=${status}`);
+  };
+
+  const filteredListings = filterListingsByStatus(filteredStatus);
 
   return (
     <div className="h-full w-full bg-white">
       <ProfileLayout>
         <div className="p-6 bg-white">
-          <h1 className="text-3xl font-semibold text-gray-800 mb-6">
-            My Listings
-          </h1>
-          {listings.length === 0 ? (
-            <p>No listings available.</p>
-          ) : (
-            <ul className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-6">
-              {listings.map((listing) => (
-                <li
-                  key={listing.id}
-                  className="border bg-white text-black border-gray-300 rounded-lg p-2 text-sm shadow-md"
-                >
-                  <h3 className="text-lg font-semibold leading-tight truncate">
-                    {listing.name}
-                  </h3>
-                  <img
-                    src={listing.imageUrl}
-                    alt={listing.name}
-                    className="w-1/2 my-2 mx-auto"
-                  />
-                  <p className="text-gray-600">Category: {listing.category}</p>
-                  <p className="text-gray-600">Price: ${listing.price}</p>
-                  <p className="text-gray-600">
-                    Status: {listing.isVerified ? "Verified" : "Unverified"}
-                  </p>
-                  <div className="flex justify-between items-center mt-2">
-                    <button
-                      onClick={() => handleDelete(listing.id)}
-                      className="text-red-600 font-medium"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
+          <div className="flex space-x-6 mb-6">
+            <button
+              className={`px-4 text-lg font-semibold py-2 ${
+                filteredStatus === "current"
+                  ? "border-b-2 border-green-500"
+                  : ""
+              }`}
+              onClick={() => handleTabChange("current")}
+            >
+              Current
+            </button>
+            <button
+              className={`px-4 text-lg font-semibold py-2 ${
+                filteredStatus === "pending"
+                  ? "border-b-2 border-green-500"
+                  : ""
+              }`}
+              onClick={() => handleTabChange("pending")}
+            >
+              Pending
+            </button>
+            <button
+              className={`px-4 text-lg font-semibold py-2 ${
+                filteredStatus === "history"
+                  ? "border-b-2 border-green-500"
+                  : ""
+              }`}
+              onClick={() => handleTabChange("history")}
+            >
+              History
+            </button>
+          </div>
+
+          {filteredStatus === "current" && (
+            <table className="table-auto w-full text-left">
+              <thead>
+                <tr>
+                  <th className="px-4 py-2">Item</th>
+                  <th className="px-4 py-2">Ask Price</th>
+                  <th className="px-4 py-2">Highest Bid</th>
+                  <th className="px-4 py-2">Sell</th>
+                  <th className="px-4 py-2">Expires</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredListings.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" className="text-center py-4">
+                      No listings available under current.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredListings.map((listing) => (
+                    <tr key={listing.id}>
+                      <td className="border px-2 py-1 flex items-center">
+                        <img
+                          src={listing.imageUrl}
+                          alt={listing.name}
+                          className="w-14 h-14 object-cover mr-4"
+                        />
+                        {listing.name}
+                      </td>
+                      <td className="border px-4 py-2">${listing.price}</td>
+                      <td className="border px-4 py-2">
+                        ${listing.highestBid}
+                      </td>
+                      <td className="border px-4 py-2">
+                        <button
+                          onClick={() =>
+                            handleSell(listing.id, listing.highestBid)
+                          }
+                          className="bg-white border border-black rounded-full text-md font-semibold text-blue-600 px-3 py-1 rounded"
+                        >
+                          Sell
+                        </button>
+                      </td>
+                      <td className="border px-4 py-2">
+                        {Math.ceil(
+                          (new Date(listing.expiryDate) - new Date()) /
+                            (1000 * 60 * 60 * 24)
+                        )}{" "}
+                        days
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          )}
+
+          {filteredStatus === "pending" && (
+            <table className="table-auto w-full text-left">
+              <thead>
+                <tr>
+                  <th className="px-4 py-2">Item</th>
+                  <th className="px-4 py-2">Sale Date</th>
+                  <th className="px-4 py-2">Ship By</th>
+                  <th className="px-4 py-2">Sale Price</th>
+                  <th className="px-4 py-2">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredListings.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" className="text-center py-4">
+                      No listings available under pending.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredListings.map((listing) => (
+                    <tr key={listing.id}>
+                      <td className="border px-4 py-2">{listing.name}</td>
+                      <td className="border px-4 py-2">{listing.saleDate}</td>
+                      <td className="border px-4 py-2">{listing.shipBy}</td>
+                      <td className="border px-4 py-2">
+                        ${listing.salePrice}
+                      </td>
+                      <td className="border px-4 py-2">
+                        {listing.shippingStatus
+                          ? "Delivered"
+                          : "Not Delivered"}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           )}
         </div>
       </ProfileLayout>

@@ -13,14 +13,13 @@ import {
 import { getAuth } from "firebase/auth";
 
 export default function Sell() {
-  const [activeTab, setActiveTab] = useState("newListing");
   const [productName, setProductName] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [category, setCategory] = useState("sneakers");
   const [subcategory, setSubcategory] = useState("");
   const [price, setPrice] = useState("");
   const [listings, setListings] = useState([]);
-
+  const [editingId, setEditingId] = useState(null); // ID of the product being edited
   const db = getFirestore();
   const auth = getAuth();
 
@@ -28,7 +27,24 @@ export default function Sell() {
     e.preventDefault();
     const userId = auth.currentUser.uid;
 
-    try {
+    // Set expiry date to 30 days from today
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 30); // Add 30 days
+
+    if (editingId) {
+      // If editing, update the existing product
+      const listingRef = doc(db, "products", editingId);
+      await updateDoc(listingRef, {
+        name: productName,
+        category,
+        subcategory,
+        price: parseFloat(price),
+        imageUrl,
+        expiryDate: expiryDate.toISOString(),
+      });
+      setEditingId(null); // Reset editing state
+    } else {
+      // Add a new product
       await addDoc(collection(db, "products"), {
         userId,
         name: productName,
@@ -36,19 +52,18 @@ export default function Sell() {
         subcategory,
         price: parseFloat(price),
         imageUrl,
-        isVerified: false,
-        isliked: false,
+        expiryDate: expiryDate.toISOString(), // Save expiry date
+        verified: false,
+        isLiked: false,
       });
-
-      
-      setProductName("");
-      setCategory("sneakers");
-      setSubcategory("");
-      setPrice("");
-      setImageUrl("");
-    } catch (error) {
-      console.error("Error uploading the listing:", error);
     }
+
+    // Reset form fields
+    setProductName("");
+    setCategory("sneakers");
+    setSubcategory("");
+    setPrice("");
+    setImageUrl("");
   };
 
   useEffect(() => {
@@ -62,46 +77,24 @@ export default function Sell() {
         }))
         .filter((listing) => listing.userId === userId);
 
-      console.log("Current user listings:", listingsData);
       setListings(listingsData);
     });
 
     return () => unsubscribe();
   }, [db, auth.currentUser.uid]);
 
-  const handleVerify = async (id, category) => {
-    // Get the current logged-in user's ID
-    const userId = auth.currentUser.uid;
-    // Reference to the specific product in the 'products' collection in Firestore
-    const listingRef = doc(db, "products", id);
-    // Retrieve the document snapshot for the specific product
-    const listingSnapshot = await getDoc(listingRef);
-    // Check if the product exists in Firestore
-    if (listingSnapshot.exists()) {
-      // Get the product data
-      const listingData = listingSnapshot.data();
-      // Check if the current user is the owner of the product
-      if (listingData.userId === userId) {
-        // If the user is the owner, update the 'isVerified' field to true
-        await updateDoc(listingRef, { isVerified: true });
-        // Reference to the new collection (category) where the product will be moved
-        const categoryRef = collection(db, category);
-        // Add the product to the specific category collection with 'isVerified' set to true
-        await addDoc(categoryRef, {
-          ...listingData, // Spread the original product data
-          isVerified: true, // Ensure the 'isVerified' flag is true
-        });
-        console.log("Product verified and moved to category collection.");
-      } else {
-        // Log an error if the current user is not the owner of the product
-        console.error("You can only verify your own listings.");
-      }
-    }
+  const handleUpdate = (listing) => {
+    // Populate form with selected listing's data for editing
+    setEditingId(listing.id);
+    setProductName(listing.name);
+    setCategory(listing.category);
+    setSubcategory(listing.subcategory);
+    setPrice(listing.price);
+    setImageUrl(listing.imageUrl);
   };
-  
 
+  // deleting the product from current listings & Firestore
   const handleDelete = async (id) => {
-    console.log("Attempting to delete product with ID:", id);
     const listingRef = doc(db, "products", id);
     const listingSnapshot = await getDoc(listingRef);
 
@@ -111,7 +104,6 @@ export default function Sell() {
 
       try {
         await deleteDoc(listingRef);
-        console.log("Deleted from products collection");
 
         const categoryCollectionRef = collection(db, category);
         const querySnapshot = await getDocs(categoryCollectionRef);
@@ -124,16 +116,11 @@ export default function Sell() {
 
         if (categoryDoc) {
           await deleteDoc(doc(db, category, categoryDoc.id));
-          console.log("Deleted from category collection");
-        } else {
-          console.warn("Category document not found for deletion");
         }
 
         setListings((prevListings) =>
           prevListings.filter((listing) => listing.id !== id)
         );
-
-        console.log("Product deleted from both collections.");
       } catch (error) {
         console.error("Error deleting the product:", error);
       }
@@ -180,15 +167,18 @@ export default function Sell() {
       "Controller",
       "Console",
       "VR headset",
-      'Speaker',
+      "Speaker",
     ],
   };
 
   return (
     <div className="container mx-auto h-full p-5 bg-blue-200 overflow grid grid-cols-1 md:grid-cols-2 gap-10">
       <div className="bg-gray-300 p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold mb-4"> New Listing</h2>
+        <h2 className="text-2xl font-semibold mb-4">
+          {editingId ? "Edit Listing" : "New Listing"}
+        </h2>
         <form onSubmit={handleSubmit}>
+          {/* Form for product details */}
           <div className="mb-4">
             <label
               htmlFor="product-name"
@@ -199,11 +189,10 @@ export default function Sell() {
             <input
               id="product-name"
               type="text"
-              placeholder="Enter Product Name"
               value={productName}
               onChange={(e) => setProductName(e.target.value)}
               required
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
             />
           </div>
 
@@ -214,12 +203,8 @@ export default function Sell() {
             <select
               id="category"
               value={category}
-              onChange={(e) => {
-                setCategory(e.target.value);
-                setSubcategory("");
-              }}
-              required
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+              onChange={(e) => setCategory(e.target.value)}
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
             >
               <option value="sneakers">Sneakers</option>
               <option value="apparels">Apparels</option>
@@ -238,10 +223,11 @@ export default function Sell() {
             </label>
             <select
               id="subcategory"
+              type="text"
               value={subcategory}
               onChange={(e) => setSubcategory(e.target.value)}
               required
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
             >
               <option value="" disabled>
                 Select Subcategory
@@ -261,11 +247,10 @@ export default function Sell() {
             <input
               id="price"
               type="number"
-              placeholder="Enter Price"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               required
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
             />
           </div>
 
@@ -276,11 +261,10 @@ export default function Sell() {
             <input
               id="image-url"
               type="text"
-              placeholder="Enter Image URL"
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
               required
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
             />
             {imageUrl && (
               <img
@@ -294,10 +278,10 @@ export default function Sell() {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="w-1/3 bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition duration-50"
+              className="w-1/3 bg-black text-white py-2 rounded-lg"
             >
-              Submit Listing
-            </button>
+              {editingId ? "Update Listing" : "Submit Listing"}
+            </button>{" "}
           </div>
         </form>
       </div>
@@ -308,49 +292,39 @@ export default function Sell() {
           <p>No listings available.</p>
         ) : (
           <ul className="grid grid-cols-1 sm:grid-cols-3 lg:grid-row-4 gap-4">
-            {listings
-              .sort((a, b) => a.isVerified - b.isVerified)
-              .map((listing) => (
-                <li
-                  key={listing.id}
-                  className="border bg-white text-black text-sm border-black rounded-lg p-2"
-                >
-                  <h3 className="text-md font-semibold leading-tight truncate">
-                    {listing.name}
-                  </h3>
-                  <img
-                    src={listing.imageUrl}
-                    alt={listing.name}
-                    className="w-1/2 h-24 my-2 mx-auto"
-                  />
-                  <p>Subcategory: {listing.subcategory}</p>{" "}
-                  <p>Category: {listing.category}</p>
-                  <p>Price: ${listing.price}</p>
-                  <p>
-                    Status: {listing.isVerified ? "Verified" : "Unverified"}
-                  </p>
-                  <div className=" flex justify-between">
-                    <button
-                      onClick={() => handleVerify(listing.id, listing.category)}
-                      className={`text-green-600 bottom-2 left-2 font-medium ${
-                        listing.isVerified
-                          ? "opacity-50 cursor-not-allowed"
-                          : ""
-                      }`}
-                      disabled={listing.isVerified}
-                    >
-                      {listing.isVerified ? "Verified" : "Verify"}
-                    </button>
-
-                    <button
-                      onClick={() => handleDelete(listing.id)}
-                      className="text-red-600 bottom-2 right-2 font-medium"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </li>
-              ))}
+            {listings.map((listing) => (
+              <li
+                key={listing.id}
+                className="border bg-white text-black text-sm border-black rounded-lg p-2"
+              >
+                <h3 className="text-md font-semibold leading-tight truncate">
+                  {listing.name}
+                </h3>
+                <img
+                  src={listing.imageUrl}
+                  alt={listing.name}
+                  className="w-1/2 h-28 my-2 mx-auto"
+                />
+                <p>Category: {listing.category}</p>
+                <p>Subcategory: {listing.subcategory}</p>
+                <p>Price: ${listing.price}</p>
+                <p>Status: {listing.verified ? "Verified" : "Unverified"}</p>
+                <div className="flex justify-between">
+                  <button
+                    onClick={() => handleUpdate(listing)}
+                    className="text-blue-600 bottom-2 left-2 font-medium "
+                  >
+                    Update
+                  </button>
+                  <button
+                    onClick={() => handleDelete(listing.id)}
+                    className="text-red-600 bottom-2 right-2 font-medium"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </li>
+            ))}
           </ul>
         )}
       </div>
