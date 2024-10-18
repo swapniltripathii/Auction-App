@@ -133,7 +133,7 @@ const ProfileLayout = ({ children }) => {
 
             {/* Settings */}
             <Link
-              to="/setting"
+              to="/shipping"
               className={`flex items-center space-x-4 p-4 w-full rounded-md ${
                 isActive("/setting") ? "bg-white" : "hover:bg-white"
               }`}

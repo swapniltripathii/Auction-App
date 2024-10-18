@@ -2,14 +2,19 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/authContext/authcontext";
 import { getAuth, updatePassword } from "firebase/auth";
 import ProfileLayout from "../components/ProfileLayouts";
+import { getFirestore, collection, onSnapshot } from "firebase/firestore";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const Profile = () => {
-  const { currentUser } = useAuth(); // get the logged-in user's details
+  const { currentUser } = useAuth(); // Get the logged-in user's details
   const [userData, setUserData] = useState({
     displayName: "",
     email: "",
     uid: "", // Add uid to your userData state
   });
+  const [shippingInfo, setShippingInfo] = useState(null); // State to hold shipping information
+  const db = getFirestore();
+  const navigate = useNavigate(); // Initialize navigate
 
   useEffect(() => {
     if (currentUser) {
@@ -18,8 +23,20 @@ const Profile = () => {
         email: currentUser.email,
         uid: currentUser.uid, // Fetch the uid from currentUser
       });
+
+      // Fetch shipping information
+      const shippingCollection = collection(db, "shippingInfo");
+      const unsubscribe = onSnapshot(shippingCollection, (snapshot) => {
+        const userShippingData = snapshot.docs
+          .map((doc) => ({ id: doc.id, ...doc.data() }))
+          .find((info) => info.userId === currentUser.uid); // Match user ID
+
+        setShippingInfo(userShippingData);
+      });
+
+      return () => unsubscribe(); // Cleanup the subscription
     }
-  }, [currentUser]);
+  }, [currentUser, db]);
 
   const handleResetPassword = async () => {
     try {
@@ -83,7 +100,10 @@ const Profile = () => {
               <h2 className="text-xl font-medium text-gray-700 mb-4">
                 Shipping Info
               </h2>
-              <button className="bg-gray-100 text-gray-700 px-4 py-2 mb-4 rounded-full hover:bg-gray-200">
+              <button
+                onClick={() => navigate("/shipping")} // Navigate to the shipping page
+                className="bg-gray-100 text-gray-700 px-4 py-2 mb-4 rounded-full hover:bg-gray-200"
+              >
                 Edit
               </button>
             </div>
@@ -91,9 +111,21 @@ const Profile = () => {
 
             {/* Shipping Info Content */}
             <div className="flex justify-between items-center">
-              <p className="text-gray-500">
-                You do not have any shipping information on file.
-              </p>
+              {shippingInfo ? (
+                <div className="text-gray-800 text-lg">
+                  <p>{shippingInfo.address1}</p>
+                  {shippingInfo.address2 && <p>{shippingInfo.address2}</p>}
+                  <p>
+                    {shippingInfo.city}, {shippingInfo.state}{" "}
+                    {shippingInfo.postalCode}
+                  </p>
+                  <p>{shippingInfo.phoneNumber}</p>
+                </div>
+              ) : (
+                <p className="text-gray-500">
+                  You do not have any shipping information on file.
+                </p>
+              )}
             </div>
           </div>
         </div>

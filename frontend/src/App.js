@@ -25,6 +25,8 @@ import "react-toastify/dist/ReactToastify.css"; // Toastify CSS
 import About from "./routes/Pages/About";
 import Help from "./routes/Pages/Help";
 import ProductDetail from "./components/ProductDetail";
+import Shipping from "./routes/Pages/Shipping";
+// import Demo from "./routes/demo2";
 
 function App() {
   return (
@@ -48,8 +50,8 @@ function App() {
             <Route path="/accessories" element={<Accessories />} />
             <Route path="/electronics" element={<Electronics />} />
             <Route path="/profilelayouts" element={<ProfileLayout />} />
-            <Route path="/product/:productId" element={<ProductDetail />} /> {/* Corrected here */}
-
+            <Route path="/product/:productId" element={<ProductDetail />} />
+            {/* <Route path="/demo" element={<Demo />} /> */}
             {/* Protected Routes */}
             <Route
               path="/home"
@@ -96,6 +98,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <Favourite />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/shipping"
+              element={
+                <PrivateRoute>
+                  <Shipping />
                 </PrivateRoute>
               }
             />
