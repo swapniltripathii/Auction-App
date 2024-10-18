@@ -127,7 +127,7 @@ const Card = ({ product, isLoading }) => {
               animate={hasClicked ? { scale: 1 } : {}}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <FaHeart className="text-3xl text-red-700" />
+              <FaHeart className="text-2xl text-red-700" />
             </motion.div>
           ) : (
             <motion.div
@@ -135,7 +135,7 @@ const Card = ({ product, isLoading }) => {
               animate={hasClicked ? { scale: 1 } : {}}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <CiHeart className="text-3xl" />
+              <CiHeart className="text-2xl" />
             </motion.div>
           )}
         </motion.button>
