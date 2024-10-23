@@ -1,15 +1,12 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { getFirestore, collection, query, getDocs } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/authContext/authcontext";
 import logo from "../../assets/images/logo.png";
 import { FaUser, FaHeart } from "react-icons/fa";
-import { Tooltip } from "react-tooltip";
 
 const NavbarTop = () => {
-  const [isNavOpen, setIsNavOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -17,9 +14,25 @@ const NavbarTop = () => {
   const navigate = useNavigate();
   const { userLoggedIn, handleLogout } = useAuth();
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    const collectionsToSearch = ["apparels", "sneakers", "electronics", "collectibles", "accessories"];
+  // Debounce search input
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (searchQuery) handleSearch();
+    }, 300);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchQuery]);
+
+  const handleSearch = async () => {
+    const collectionsToSearch = [
+      "apparels",
+      "sneakers",
+      "electronics",
+      "collectibles",
+      "accessories",
+    ];
     let results = [];
     setLoading(true);
     setSearchResults([]);
@@ -30,7 +43,12 @@ const NavbarTop = () => {
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
           const productData = doc.data();
-          if (productData.name.toLowerCase().includes(searchQuery.toLowerCase())) {
+          if (
+            productData.name
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase()) ||
+            category.toLowerCase().includes(searchQuery.toLowerCase())
+          ) {
             results.push({
               id: doc.id,
               ...productData,
@@ -76,115 +94,153 @@ const NavbarTop = () => {
 
   return (
     <div>
-      {/* Top Navbar */}
-      <div className="fixed w-screen flex justify-between items-center h-24 p-8 bg-neutral-100 shadow-md z-10 border-b bg-gray-200">
-        <div className="flex items-center">
-          <Link to="/home">
-            <img src={logo} alt="BidRare Logo" className="h-24 w-50" />
+      <div className="fixed w-screen flex flex-col justify-between items-center shadow-md z-10">
+        <div className="flex flex-col md:flex-row justify-between bg-blue-300 shadow-lg w-full h-auto md:h-24 px-4 md:px-8 items-center">
+          <Link to="/home" className="py-2">
+            <img src={logo} alt="BidRare Logo" className="h-20 md:h-28 py-2" />
           </Link>
-        </div>
-        <form onSubmit={handleSearch} className="relative flex-grow py-6 px-12 ml-2 mr-2">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search products..."
-            className="w-full p-3 border px-10 bg-gray-100 border border-black rounded"
-          />
-          {searchQuery && (
-            <div className="mt-7 absolute left-0 top-12 bg-white w-full rounded-md shadow-lg max-h-60 overflow-auto z-20">
-              {loading ? (
-                <>
-                  <SkeletonLoader />
-                  <SkeletonLoader />
-                  <SkeletonLoader />
-                </>
-              ) : (
-                searchResults.length > 0 ? (
+          <div className="relative flex-grow py-6 px-4 md:px-12 mx-2">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search products..."
+              className="w-full p-3 border px-10 bg-gray-100 border border-black rounded"
+            />
+            {searchQuery && (
+              <div className="absolute left-1/2 transform -translate-x-1/2 z-50 top-18 w-5/6 bg-white rounded-md shadow-lg max-h-80 overflow-auto">
+                {loading ? (
+                  <>
+                    <SkeletonLoader />
+                    <SkeletonLoader />
+                    <SkeletonLoader />
+                  </>
+                ) : searchResults.length > 0 ? (
                   searchResults.map((product) => (
                     <div
                       key={product.id}
                       onClick={() => handleResultClick(product.id)}
-                      className=" p-2 border-b border-gray-300 cursor-pointer hover:bg-gray-200"
+                      className="flex items-center justify-between p-2 border-b border-gray-300 cursor-pointer hover:bg-gray-200"
                     >
-                      <h3 className="text-sm font-medium">{product.name}</h3>
-                      <p className="text-xs text-gray-500">Category: {product.category}</p>
-                      <p className="text-xs text-gray-500">Price: ${product.price}</p>
+                      <div className="flex flex-col">
+                        <h3 className="text-sm font-medium">{product.name}</h3>
+                        <p className="text-xs text-gray-500">
+                          Category: {product.category}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          Price: ${product.price}
+                        </p>
+                      </div>
+                      {product.imageUrl && (
+                        <img
+                          src={product.imageUrl}
+                          alt={product.name}
+                          className="w-16 h-16 object-cover rounded-md ml-4"
+                        />
+                      )}
                     </div>
                   ))
                 ) : (
-                  <p className=" p-2 text-gray-500 text-center">No results found</p>
-                )
-              )}
-            </div>
-          )}
-        </form>
-        <div className="flex items-center space-x-8">
-          <motion.div variants={buttonAnimation} initial="initial" whileHover="hover" whileTap="tap">
-            <Link to="/about" className="text-gray-900 px-1 text-xl font-medium">
+                  <p className="p-2 text-gray-500 text-center">
+                    No results found
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+          <div className="flex items-center space-x-2 md:space-x-4">
+            <Link
+              to="/about"
+              className="text-gray-900 text-sm md:text-lg font-medium"
+            >
               About
             </Link>
-          </motion.div>
-          <motion.div variants={buttonAnimation} initial="initial" whileHover="hover" whileTap="tap">
-            <Link to="/help" className="text-gray-900 px-1 text-xl font-medium">
+            <Link
+              to="/help"
+              className="text-gray-900 text-sm md:text-lg font-medium"
+            >
               Help
             </Link>
-          </motion.div>
-          <motion.div variants={buttonAnimation} initial="initial" whileHover="hover" whileTap="tap">
-            <Link to="/sell" className="text-gray-900 px-2 text-xl font-medium">
+            <Link
+              to="/sell"
+              className="text-gray-900 text-sm md:text-lg font-medium"
+            >
               Sell
             </Link>
-          </motion.div>
-          {userLoggedIn ? (
-            <div className=" flex gap-x-6  pt-1  ">
-              <Link to="/profile" className="text-2xl text-gray-700 pt-1 ">
-                <FaUser data-tooltip-id="profile-tooltip" data-tooltip-content="Profile" />
-              </Link>
-              <Tooltip id="profile-tooltip" place="bottom" className="bg-gray-700 text-white text-xs rounded " />
-              <Link to="/favourite" className="text-2xl text-gray-700 pt-1">
-                <FaHeart data-tooltip-id="fav-tooltip" data-tooltip-content="Favourites" />
-              </Link>
-              <Tooltip id="fav-tooltip" place="bottom" className="bg-gray-700 text-white text-xs rounded " />
-              <button
-                onClick={handleLogoutClick}
-                className="px-2  py-1 mb-2 bg-white text-black border border-black hover:bg-black transition hover:text-white font-medium rounded-3xl"
-              >
-                Logout
-              </button>
-            </div>
-          ) : (
-            <>
-              <motion.div variants={buttonAnimation} initial="initial" whileHover="hover" whileTap="tap">
-                <Link to="/login" className="px-2 py-1 bg-white text-black border border-black hover:bg-black transition duration-300 hover:text-white font-medium rounded-3xl">
-                  Login
-                </Link>
-              </motion.div>
-              <motion.div variants={buttonAnimation} initial="initial" whileHover="hover" whileTap="tap">
-                <Link to="/signup" className="px-2 py-1 bg-white text-black border border-black hover:bg-black transition duration-300 hover:text-white font-medium rounded-3xl">
-                  Signup
-                </Link>
-              </motion.div>
-            </>
-          )}
+            {userLoggedIn ? (
+              <div className="flex gap-x-3 md:gap-x-7">
+                <div className="flex py-2 gap-x-3 md:gap-x-6">
+                  <Link
+                    to="/profile"
+                    className="text-xl md:text-2xl text-gray-700 pt-1"
+                  >
+                    <FaUser />
+                  </Link>
+                  <Link
+                    to="/favourite"
+                    className="text-xl md:text-2xl text-gray-700 pt-1"
+                  >
+                    <FaHeart />
+                  </Link>
+                </div>
+                <div className="py-1">
+                  <button
+                    onClick={handleLogoutClick}
+                    className="px-3 md:px-4 py-2 bg-white text-black border border-black hover:bg-black transition hover:text-white font-medium rounded-3xl"
+                  >
+                    Logout
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <motion.div
+                  variants={buttonAnimation}
+                  initial="initial"
+                  whileHover="hover"
+                  whileTap="tap"
+                >
+                  <Link
+                    to="/login"
+                    className="px-3 md:px-4 py-2 bg-white text-black border border-black hover:bg-black transition duration-300 hover:text-white font-medium rounded-3xl"
+                  >
+                    Login
+                  </Link>
+                </motion.div>
+                <motion.div
+                  variants={buttonAnimation}
+                  initial="initial"
+                  whileHover="hover"
+                  whileTap="tap"
+                >
+                  <Link
+                    to="/signup"
+                    className="px-3 md:px-4 py-2 bg-white text-black border border-black hover:bg-black transition duration-300 hover:text-white font-medium rounded-3xl"
+                  >
+                    Signup
+                  </Link>
+                </motion.div>
+              </>
+            )}
+          </div>
         </div>
-      </div>
-      {/* Categories Navbar */}
-      <div className="fixed z-30 top-24 flex w-full justify-center items-center p-2 bg-blue-100 border-t border-b border-gray-300">
-        <Link to="/apparels" className="nav-link">
-          Apparels
-        </Link>
-        <Link to="/shoes" className="nav-link">
-          Sneakers
-        </Link>
-        <Link to="/electronics" className="nav-link">
-          Electronics
-        </Link>
-        <Link to="/accessories" className="nav-link">
-          Accessories
-        </Link>
-        <Link to="/collectibles" className="nav-link">
-          Collectibles
-        </Link>
+        <div className="flex flex-wrap w-full justify-center items-center py-2 bg-blue-400 border-b border-gray-300">
+          {[
+            "apparels",
+            "sneakers",
+            "electronics",
+            "accessories",
+            "collectibles",
+          ].map((category) => (
+            <Link
+              to={`/${category}`}
+              className="nav-link text-sm md:text-base mx-2"
+              key={category}
+            >
+              {category.charAt(0).toUpperCase() + category.slice(1)}
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -8,33 +8,32 @@ import Home from "./routes/Home";
 import Sell from "./routes/Pages/Sell";
 import { AuthProvider } from "./contexts/authContext/authcontext";
 import PrivateRoute from "./components/PrivateRoute";
-import PrivateAdminRoute from "./PrivateAdminRoute"; // Your custom admin route
-import AdminPanel from "./AdminPanel"; // Import AdminPanel component
+import PrivateAdminRoute from "./PrivateAdminRoute"; 
+import AdminPanel from "./AdminPanel";
 import Shoes from "./routes/NavbarPages.js/Shoes";
 import Collections from "./routes/NavbarPages.js/Collections";
 import Clothes from "./routes/NavbarPages.js/Clothes";
 import Accessories from "./routes/NavbarPages.js/Accessories";
 import Electronics from "./routes/NavbarPages.js/Electronics";
-import Profile from "./routes/Profile";
+import Profile from "./routes/Pages/Profile";
 import { ToastContainer } from "react-toastify";
 import ProfileLayout from "./components/ProfileLayouts";
 import Selling from "./routes/Pages/Selling";
 import Buying from "./routes/Pages/Buying";
 import Favourite from "./routes/Pages/Favourite";
-import "react-toastify/dist/ReactToastify.css"; // Toastify CSS
+import "react-toastify/dist/ReactToastify.css";
 import About from "./routes/Pages/About";
 import Help from "./routes/Pages/Help";
 import ProductDetail from "./components/ProductDetail";
+// import BuyNow from "./routes/Pages/BuyNow";
+import BidNow from "./routes/Pages/BidNow";
 import Shipping from "./routes/Pages/Shipping";
-// import Demo from "./routes/demo2";
 
 function App() {
   return (
     <div className="w-screen h-screen font-poppins overflow-x-hidden overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-300">
-      {/* Toast notifications */}
       <ToastContainer />
 
-      {/* Wrap everything in the AuthProvider */}
       <AuthProvider>
         <BrowserRouter>
           <Routes>
@@ -42,7 +41,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/shoes" element={<Shoes />} />
+            <Route path="/sneakers" element={<Shoes />} />
             <Route path="/about" element={<About />} />
             <Route path="/help" element={<Help />} />
             <Route path="/apparels" element={<Clothes />} />
@@ -51,7 +50,6 @@ function App() {
             <Route path="/electronics" element={<Electronics />} />
             <Route path="/profilelayouts" element={<ProfileLayout />} />
             <Route path="/product/:productId" element={<ProductDetail />} />
-            {/* <Route path="/demo" element={<Demo />} /> */}
             {/* Protected Routes */}
             <Route
               path="/home"
@@ -106,6 +104,22 @@ function App() {
               element={
                 <PrivateRoute>
                   <Shipping />
+                </PrivateRoute>
+              }
+            />
+            {/* <Route
+              path="/buy/:productId"
+              element={
+                <PrivateRoute>
+                  <BuyNow />
+                </PrivateRoute>
+              }
+            /> */}
+            <Route
+              path="/bid/:productId"
+              element={
+                <PrivateRoute>
+                  <BidNow />
                 </PrivateRoute>
               }
             />

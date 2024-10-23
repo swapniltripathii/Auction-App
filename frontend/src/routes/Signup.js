@@ -6,10 +6,10 @@ import {
 } from "../firebase/auth";
 import { useAuth } from "../contexts/authContext/authcontext"; // Use auth context
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore"; // Add Firestore methods
-
+import logo from "../assets/images/logowhite.png"; // Import logo
 
 const Signup = () => {
-  const { userLoggedIn } = useAuth(); 
+  const { userLoggedIn } = useAuth();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -19,7 +19,7 @@ const Signup = () => {
   const [isSigningUp, setIsSigningUp] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const db = getFirestore(); 
+  const db = getFirestore();
 
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
@@ -38,14 +38,29 @@ const Signup = () => {
           formData.email,
           formData.password
         );
-        const user = userCredential.user; 
+        const user = userCredential.user;
+
+        // Create user in Firestore
         await setDoc(doc(db, "users", user.uid), {
           firstName: formData.firstName,
           lastName: formData.lastName,
           email: formData.email,
         });
+
+        // Confirm user creation
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+          console.log(
+            "User successfully created in Firestore:",
+            userDoc.data()
+          );
+        } else {
+          console.error("User document not found after creation.");
+        }
       } catch (error) {
+        console.error("Error during signup:", error);
         setErrorMessage(error.message);
+      } finally {
         setIsSigningUp(false);
       }
     },
@@ -57,7 +72,7 @@ const Signup = () => {
       e.preventDefault();
       if (isSigningUp) return;
 
-      setIsSigningUp(true); 
+      setIsSigningUp(true);
       try {
         const userCredential = await doSignInWithGoogle();
         const user = userCredential.user;
@@ -69,9 +84,14 @@ const Signup = () => {
             lastName: user.displayName.split(" ")[1] || "",
             email: user.email,
           });
+          console.log("User added to Firestore after Google sign-in.");
+        } else {
+          console.log("User already exists in Firestore:", userDoc.data());
         }
       } catch (error) {
+        console.error("Error during Google sign-in:", error);
         setErrorMessage(error.message);
+      } finally {
         setIsSigningUp(false);
       }
     },
@@ -81,20 +101,26 @@ const Signup = () => {
   if (userLoggedIn) return <Navigate to="/home" replace={true} />;
 
   return (
-    <div className="flex flex-col w-full h-screen items-center justify-center bg-gray-800">
-      <div className="pt-10 pb-10">
+    <div className="flex flex-col w-full min-h-screen bg-blue-400">
+      {/* Banner */}
+      <div className="h-24 flex items-center justify-center bg-gray-800 text-white">
+        <Link to="/">
+          <img src={logo} alt="Logo" className="h-32" />
+        </Link>
+      </div>
+
+      <div className="flex-grow flex items-center justify-center py-10">
         <div className="w-full max-w-sm p-8 space-y-8 bg-white rounded-lg shadow-md">
-          {/* Navigation Links (Login/Signup) */}
           <div className="flex items-center justify-between border-b border-gray-300">
             <Link
               to="/login"
-              className="py-2 px-12 text-lg font-medium text-gray-600 border-b-2 border-transparent"
+              className="py-2 px-4 text-lg font-medium text-gray-600 border-b-2 border-transparent hover:border-black"
             >
               Log In
             </Link>
             <Link
               to="/signup"
-              className="py-2 px-12 text-lg font-medium text-black border-b-2 border-black"
+              className="py-2 px-4 text-lg font-medium text-black border-b-2 border-black"
             >
               Sign Up
             </Link>

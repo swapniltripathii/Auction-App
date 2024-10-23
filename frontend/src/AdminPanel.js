@@ -54,23 +54,29 @@ const AdminPanel = () => {
   const verifyProduct = async (productId, category) => {
     const productRef = doc(firestore, "products", productId);
 
-    await updateDoc(productRef, { verified: true }); // This will update the correct field
+    try {
+      // Update the product to set verified to true
+      await updateDoc(productRef, { verified: true });
 
-    // Add product to the corresponding collection (e.g., apparels, sneakers)
-    const categoryCollectionRef = collection(firestore, category);
-    const productData = (await getDoc(productRef)).data();
+      // Fetch product data
+      const productData = (await getDoc(productRef)).data();
 
-    await setDoc(doc(categoryCollectionRef, productId), {
-      ...productData,
-      verified: true,
-    });
+      // Add product to the corresponding category collection
+      const categoryCollectionRef = collection(firestore, category);
+      await setDoc(doc(categoryCollectionRef, productId), {
+        ...productData,
+        verified: true,
+      });
 
-    // Update UI
-    setProducts((prevProducts) =>
-      prevProducts.map((product) =>
-        product.id === productId ? { ...product, verified: true } : product
-      )
-    );
+      // Remove the verified product from the products list in the UI
+      setProducts((prevProducts) =>
+        prevProducts.filter((product) => product.id !== productId)
+      );
+
+      console.log(`Product ${productId} has been verified.`);
+    } catch (error) {
+      console.error("Error verifying product:", error);
+    }
   };
 
   const deleteProduct = async (productId, category) => {
@@ -85,6 +91,8 @@ const AdminPanel = () => {
       setProducts((prevProducts) =>
         prevProducts.filter((product) => product.id !== productId)
       );
+
+      console.log(`Product ${productId} has been deleted.`);
     } catch (error) {
       console.error("Error deleting product:", error);
     }
@@ -106,21 +114,20 @@ const AdminPanel = () => {
               onClick={() => handleUserClick(user.id)}
             >
               <h2 className="text-xl text-black font-semibold">{`${user.firstName} ${user.lastName}`}</h2>
-              {/* <p className="text-black">{user.email}</p> */}
             </div>
           ))}
         </div>
       </div>
 
-      <div className=" w-4/5">
+      <div className="w-4/5">
         {selectedUserId ? (
-          <div className=" pl-4 pt-1">
+          <div className="pl-4 pt-1">
             <h2 className="text-2xl font-semibold mb-1">{`${
               users.find((user) => user.id === selectedUserId)?.firstName
             }'s Products`}</h2>
 
             {/* Filter products by selected user */}
-            {products.filter((product) => product.userId === selectedUserId)
+            {products.filter((product) => product.sellerId === selectedUserId)
               .length === 0 ? (
               <div className="text-gray-600 text-lg font-medium">
                 No products listed.
@@ -128,7 +135,7 @@ const AdminPanel = () => {
             ) : (
               <div className="products-list grid w-full pr-4 pb-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
                 {products
-                  .filter((product) => product.userId === selectedUserId)
+                  .filter((product) => product.sellerId === selectedUserId)
                   .slice(0, 15) // Limit to 15 products
                   .map((product) => (
                     <div

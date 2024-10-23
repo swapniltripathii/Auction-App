@@ -40,6 +40,16 @@ export default function Shipping() {
     e.preventDefault();
     const userId = auth.currentUser.uid;
 
+    // Validate postal code and phone number
+    if (shippingInfo.postalCode.length !== 6) {
+      alert("Postal Code must be exactly 6 digits.");
+      return;
+    }
+    if (shippingInfo.phoneNumber.length !== 10) {
+      alert("Phone Number must be exactly 10 digits.");
+      return;
+    }
+
     if (userShippingId) {
       // Update existing shipping info
       const shippingRef = doc(db, "shippingInfo", userShippingId);
@@ -84,8 +94,9 @@ export default function Shipping() {
       <div
         className="bg-gray-800 p-6 rounded-lg shadow-md"
         style={{
-          width: "35%", // 2/3 width of the container
-          height: "60%", // reduce height by 20%
+          width: "90%", // Use 90% width for better responsiveness
+          maxWidth: "600px", // Set a max-width for larger screens
+          height: "auto", // Auto height for better responsiveness
         }}
       >
         <h2 className="text-2xl font-semibold mb-4">
@@ -172,8 +183,8 @@ export default function Shipping() {
           </div>
 
           {/* City & State Fields */}
-          <div className="mb-4 flex space-x-4">
-            <div className="w-1/2">
+          <div className="mb-4 flex flex-wrap -mx-2">
+            <div className="w-full md:w-1/2 px-2">
               <label htmlFor="city" className="block text-white font-medium">
                 City
               </label>
@@ -187,7 +198,7 @@ export default function Shipping() {
                 className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
               />
             </div>
-            <div className="w-1/2">
+            <div className="w-full md:w-1/2 px-2">
               <label htmlFor="state" className="block text-white font-medium">
                 State
               </label>
@@ -204,8 +215,8 @@ export default function Shipping() {
           </div>
 
           {/* Postal Code & Phone Number Fields */}
-          <div className="mb-4 flex space-x-4">
-            <div className="w-1/2">
+          <div className="mb-4 flex flex-wrap -mx-2">
+            <div className="w-full md:w-1/2 px-2">
               <label
                 htmlFor="postalCode"
                 className="block text-black font-medium"
@@ -219,10 +230,11 @@ export default function Shipping() {
                 value={shippingInfo.postalCode}
                 onChange={handleChange}
                 required
+                pattern="\d{6}" // Restrict to 6 digits
                 className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
               />
             </div>
-            <div className="w-1/2">
+            <div className="w-full md:w-1/2 px-2">
               <label
                 htmlFor="phoneNumber"
                 className="block text-black font-medium"
@@ -236,6 +248,7 @@ export default function Shipping() {
                 value={shippingInfo.phoneNumber}
                 onChange={handleChange}
                 required
+                pattern="\d{10}" // Restrict to 10 digits
                 className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
               />
             </div>

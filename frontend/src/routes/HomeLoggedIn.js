@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import NavbarTop from "../components/shared/NavbarTop";
-import { useAuth } from "../contexts/authContext/authcontext"; // Import useAuth to access the context
+import { useAuth } from "../contexts/authContext/authcontext";
 import Apparels from "../components/categories/Apparels";
 import Collectibles from "../components/categories/Collectibles";
 import Sneakers from "../components/categories/Sneakers";
-import localImage from "../assets/images/banner_1.png"; // Import the local image
+import localImage from "../assets/images/banner_1.png";
 import localImage2 from "../assets/images/banner_2.webp";
 import SliderCard from "../components/SliderCard";
 import Footer from "../components/Footer";
 import Accessory from "../components/categories/Accessory";
 import Electron from "../components/categories/Electron";
+
 const HomeLoggedIn = () => {
   const { currentUser } = useAuth();
 
@@ -22,12 +23,12 @@ const HomeLoggedIn = () => {
 
       {/* Home content */}
       <div className="w-full p-4 bg-gray-200">
-        <h1 className="text-black text-2xl font-sansi text-semibold">
+        <h1 className="text-black text-2xl font-sans font-semibold">
           Welcome, {currentUser?.displayName || "User"}
         </h1>
 
         {/* Product Listings Grid */}
-        <div className="pl-16 pr-16">
+        <div className="px-4 md:px-16">
           <div className="pt-1 pl-4 text-2xl font-semibold">Apparels</div>
           <Apparels />
           <SliderCard />
@@ -35,16 +36,16 @@ const HomeLoggedIn = () => {
           <Sneakers />
           <div className="pt-1 pl-4 text-2xl font-semibold">Accessories</div>
           <Accessory />
-          <div className="my-4 flex justify-center rounded-2xl">
+          <div className="my-4 flex flex-col md:flex-row justify-center rounded-2xl">
             <img
               src={localImage}
               alt="Local"
-              className="w-auto item-center  rounded-3xl h-auto"
+              className="w-full md:w-auto rounded-3xl h-auto mb-4 md:mb-0 md:mr-4"
             />
             <img
               src={localImage2}
               alt="Local"
-              className="w-auto item-center ml-10 rounded-3xl  h-auto"
+              className="w-full md:w-auto rounded-3xl h-auto"
             />
           </div>
           <div className="pt-1 pl-4 text-2xl font-semibold">Collectibles</div>

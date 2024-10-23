@@ -1,167 +1,355 @@
-const products = {
-  apparels: [
-    {
-      id: 1,
-      name: "T-Shirt",
-      image:
-        "https://i.pinimg.com/564x/86/ee/b8/86eeb8fc2faefabc151fecd892a071a0.jpg",
-      description: "A cool t-shirt",
-      lowestAsk: "300",
-      lastSale: "290"
-    },
-    {
-      id: 2,
-      name: "BALENCIAGA Ripped Pocket Hoodie",
-      image:
-        "https://i.pinimg.com/564x/8f/4a/53/8f4a53794c4e96c6e0a12ca7c6fd86e8.jpg",
-      description: "A cool hoodie",
-      lowestAsk: "600",
-      lastSale: "590"
-    },
-    {
-      id: 3,
-      name: "Temu Creative Monogram Print",
-      image:
-        "https://i.pinimg.com/564x/8d/9c/d3/8d9cd3fd4f748744f00fe909255badda.jpg",
-      description: "A cool t-shirt",
-      lowestAsk: "140",
-      lastSale: "130"
-    },
-    {
-      id: 4,
-      name: "Plus Size Slogan Print Tie-Dye",
-      image:
-        "https://i.pinimg.com/564x/a1/62/33/a16233db505b8be56203b88104662e7f.jpg",
-      description: "A cool t-shirt",
-      lowestAsk: "170",
-      lastSale: "160"
-    },
-    {
-      id: 5,
-      name: "Dust of Gods | Jacket",
-      image:
-        "https://i.pinimg.com/enabled_hi/564x/4e/3b/fd/4e3bfd5426e0630b5acc4fa613a342a3.jpg",
-      description: "A cool jacket",
-      lowestAsk: "1050",
-      lastSale: "1000"
-    },
-    {
-      id: 6,
-      name: "Top Coat - Blanco / METRO",
-      image:
-        "https://i.pinimg.com/564x/7f/bf/66/7fbf66b4613b321ba98d820b3f61be26.jpg",
-      description: "A cool top coat",
-      lowestAsk: "40",
-      lastSale: "33"
-    },
-    {
-      id: 7,
-      name: "Star Nasa | Jacket",
-      image:
-        "https://i.pinimg.com/564x/ad/b8/68/adb868666b1089bcf09b23a321efe17f.jpg",
-      description: "A cool jacket",
-      lowestAsk: "1050",
-      lastSale: "1033"
-    },
-    {
-      id: 8,
-      name: "Urban Patchwork- Varsity Jacket",
-      image:
-        "https://i.pinimg.com/564x/68/29/eb/6829eb32058d51fd31c0713c5e062a1c.jpg",
-      description: "A cool jacket",
-      lowestAsk: "40",
-      lastSale: "33"
-    },
-    {
-      id: 9,
-      name: "Temu｜'Zaful Men' Alaska Graphic Eagle Printed",
-      image:
-        "https://i.pinimg.com/564x/f5/a4/5e/f5a45e43130384f4af4dcfa4f7b0fd73.jpg",
-      description: "A cool t-shirt",
-      lowestAsk: "40",
-      lastSale: "33"
-    },
-  ],
-  sneakers: [
-    {
-      id: 10,
-      name: "Blessing Words - Men's Dunk Jumbo Custom",
-      image:
-        "https://i.pinimg.com/enabled_hi/564x/50/14/ea/5014ea803779b6c9f6af88ba2876db2f.jpg",
-      description:
-        "The addition of brown and yellow Christmas-themed ornaments further enhances the retro charm",
-      lowestAsk: "65",
-      lastSale: "59.99"
-    },
-    {
-      id: 11,
-      name: "PRADA Systeme Suede And Mesh Sneakers - Granatope",
-      image:
-        "https://i.pinimg.com/564x/e2/0e/5f/e20e5f37ea3822e1de946256cf25c232.jpg",
-      description:
-        'Prada "Systeme" mesh fabric, leather, and suede sneakers with rubber burlotto detail',
-      lowestAsk: "40",
-      lastSale: "33"
-    },
-    {
-      id: 12,
-      name: "Temu｜Men' Skate Sneakers",
-      image:
-        "https://i.pinimg.com/564x/29/87/67/29876709d83e831143c00c7e7f42372a.jpg",
-      description:
-        "Breathable, Non-slip , Lace-up Casual Shoes For Outdoor Activities",
-      lowestAsk: "40",
-      lastSale: "33"
-    },
-    {
-      id: 13,
-      name: "Asics 511 | Cool Sneakers",
-      image:
-        "https://i.pinimg.com/564x/4f/28/ae/4f28ae388cfbe8bc60e30c824b18a5dc.jpg",
-      description: "cool nice shoes",
-      lowestAsk: "40",
-      lastSale: "33"
-    },
-    {
-      id: 14,
-      name: "Balenciaga Shoes | Balenciaga Track Sneaker Womens Black",
-      image:
-        "https://i.pinimg.com/564x/a5/13/e0/a513e0a063e658ea1659527535a0cb93.jpg",
-      description: "A cool sneaker",
-      lowestAsk: "40",
-      lastSale: "33"
-    },
-    {
-      id: 15,
-      name: "Nike G.T. Cut 2 Men's Basketball Shoes",
-      image:
-        "https://i.pinimg.com/564x/de/71/30/de71307c1fd7fa1e7f93c691d2a86a2a.jpg",
-      description: "Space makers stay on the floor.",
-      lowestAsk: "40",
-      lastSale: "33"
-    },
-  ],
-  collectibles: [
-    {
-      id: 16,
-      name: "Louis Vuitton Monogram Multicolore Speedy 30 Satchel (SHF-xtfdAz)",
-      image:
-        "https://i.pinimg.com/564x/d4/83/df/d483df8734968f87f673d667496a33eb.jpg",
-      description: "Limited edition action figure",
-      lowestAsk: "210",
-      lastSale: "199.99"
-    },
-    {
-      id: 17,
-      name: "Backpack",
-      image:
-        "https://i.pinimg.com/736x/fe/8f/1b/fe8f1b807ce5f1bcbf696fbf7a53fba4.jpg",
-      description: "A cool backpack",
-      lowestAsk: "40",
-      lastSale: "33"
-    },
-    
-  ],
-};
+import React, { useState, useEffect } from "react";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  onSnapshot,
+  updateDoc,
+  doc,
+  deleteDoc,
+  getDoc,
+  getDocs,
+} from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
-export default products;
+export default function Sell() {
+  const [productName, setProductName] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [category, setCategory] = useState("sneakers");
+  const [subcategory, setSubcategory] = useState("");
+  const [price, setPrice] = useState("");
+  const [listings, setListings] = useState([]);
+  const [editingId, setEditingId] = useState(null); // ID of the product being edited
+  const [listingType, setListingType] = useState("sellNow"); // New state for listing type
+  const db = getFirestore();
+  const auth = getAuth();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const userId = auth.currentUser.uid;
+
+    // Set expiry date to 30 days from today
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 30); // Add 30 days
+
+    const productData = {
+      userId,
+      name: productName,
+      category,
+      subcategory,
+      price: parseFloat(price),
+      imageUrl,
+      expiryDate: expiryDate.toISOString(),
+      verified: false,
+      isLiked: false,
+      listingType, // Add listing type to product data
+    };
+
+    if (editingId) {
+      // If editing, update the existing product
+      const listingRef = doc(db, "products", editingId);
+      await updateDoc(listingRef, productData);
+      setEditingId(null); // Reset editing state
+    } else {
+      // Add a new product
+      await addDoc(collection(db, "products"), productData);
+    }
+
+    // Reset form fields
+    setProductName("");
+    setCategory("sneakers");
+    setSubcategory("");
+    setPrice("");
+    setImageUrl("");
+    setListingType("sellNow"); // Reset listing type
+  };
+
+  useEffect(() => {
+    const productsCollection = collection(db, "products");
+    const unsubscribe = onSnapshot(productsCollection, (snapshot) => {
+      const userId = auth.currentUser.uid;
+      const listingsData = snapshot.docs
+        .map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+        .filter((listing) => listing.userId === userId);
+
+      setListings(listingsData);
+    });
+
+    return () => unsubscribe();
+  }, [db, auth.currentUser.uid]);
+
+  const handleUpdate = (listing) => {
+    // Populate form with selected listing's data for editing
+    setEditingId(listing.id);
+    setProductName(listing.name);
+    setCategory(listing.category);
+    setSubcategory(listing.subcategory);
+    setPrice(listing.price);
+    setImageUrl(listing.imageUrl);
+    setListingType(listing.listingType || "sellNow"); // Set listing type for editing
+  };
+
+  // Deleting the product from current listings & Firestore
+  const handleDelete = async (id) => {
+    const listingRef = doc(db, "products", id);
+    const listingSnapshot = await getDoc(listingRef);
+
+    if (listingSnapshot.exists()) {
+      const listingData = listingSnapshot.data();
+      const category = listingData.category;
+
+      try {
+        await deleteDoc(listingRef);
+
+        const categoryCollectionRef = collection(db, category);
+        const querySnapshot = await getDocs(categoryCollectionRef);
+
+        const categoryDoc = querySnapshot.docs.find(
+          (doc) =>
+            doc.data().userId === listingData.userId &&
+            doc.data().name === listingData.name
+        );
+
+        if (categoryDoc) {
+          await deleteDoc(doc(db, category, categoryDoc.id));
+        }
+
+        setListings((prevListings) =>
+          prevListings.filter((listing) => listing.id !== id)
+        );
+      } catch (error) {
+        console.error("Error deleting the product:", error);
+      }
+    } else {
+      console.error("Product not found in the 'products' collection.");
+    }
+  };
+
+  const subcategories = {
+    sneakers: [
+      "Running",
+      "Casual",
+      "Sneakers",
+      "Basketball",
+      "Sliders",
+      "Skate",
+      "Football",
+    ],
+    apparels: [
+      "T-shirt",
+      "Jersey",
+      "Jacket",
+      "Hoodies & Sweatshirts",
+      "Joggers",
+      "Pants",
+    ],
+    collectibles: [
+      "Action Figures",
+      "Vintage Items",
+      "Memorabilia",
+      "Painting",
+      "Cards",
+      "Toys",
+      "Antiques",
+    ],
+    accessories: ["Bags", "Caps", "Watches", "Sunglasses"],
+    electronics: [
+      "Mobile Phones",
+      "Laptops",
+      "Cameras",
+      "GPUs",
+      "Headphones",
+      "TWS",
+      "Controller",
+      "Console",
+      "VR headset",
+      "Speaker",
+    ],
+  };
+
+  return (
+    <div className="container mx-auto h-full p-5 bg-blue-200 overflow grid grid-cols-1 md:grid-cols-2 gap-10">
+      <div className="bg-gray-300 p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-semibold mb-4">
+          {editingId ? "Edit Listing" : "New Listing"}
+        </h2>
+        <form onSubmit={handleSubmit}>
+          {/* Form for product details */}
+          <div className="mb-4">
+            <label
+              htmlFor="product-name"
+              className="block text-black font-medium"
+            >
+              Product Name
+            </label>
+            <input
+              id="product-name"
+              type="text"
+              value={productName}
+              onChange={(e) => setProductName(e.target.value)}
+              required
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label htmlFor="category" className="block text-black font-medium">
+              Category
+            </label>
+            <select
+              id="category"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
+            >
+              <option value="sneakers">Sneakers</option>
+              <option value="apparels">Apparels</option>
+              <option value="collectibles">Collectibles</option>
+              <option value="accessories">Accessories</option>
+              <option value="electronics">Electronics</option>
+            </select>
+          </div>
+
+          <div className="mb-4">
+            <label
+              htmlFor="subcategory"
+              className="block text-black font-medium"
+            >
+              Subcategory
+            </label>
+            <select
+              id="subcategory"
+              value={subcategory}
+              onChange={(e) => setSubcategory(e.target.value)}
+              required
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
+            >
+              <option value="" disabled>
+                Select Subcategory
+              </option>
+              {subcategories[category]?.map((subcat) => (
+                <option key={subcat} value={subcat}>
+                  {subcat}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mb-4">
+            <label htmlFor="price" className="block text-black font-medium">
+              Price ($)
+            </label>
+            <input
+              id="price"
+              type="number"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              required
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label htmlFor="image-url" className="block text-black font-medium">
+              Image URL
+            </label>
+            <input
+              id="image-url"
+              type="text"
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+              required
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
+            />
+            {imageUrl && (
+              <img
+                src={imageUrl}
+                alt="Product Preview"
+                className="mt-4 w-36 mx-auto"
+              />
+            )}
+          </div>
+
+          {/* New Listing Type Dropdown */}
+          <div className="mb-4">
+            <label
+              htmlFor="listing-type"
+              className="block text-black font-medium"
+            >
+              Listing Type
+            </label>
+            <select
+              id="listing-type"
+              value={listingType}
+              onChange={(e) => setListingType(e.target.value)}
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
+            >
+              <option value="sellNow">Sell Now</option>
+              <option value="ask">Ask</option>
+            </select>
+          </div>
+
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              className="w-1/3 bg-black text-white py-2 rounded-lg"
+            >
+              {editingId ? "Update Listing" : "Submit Listing"}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div className="p-4 rounded-lg bg-gray-600 h-full overflow shadow-md">
+        <h2 className="text-2xl font-semibold mb-4">Current Listings</h2>
+        {listings.length === 0 ? (
+          <p>No listings available.</p>
+        ) : (
+          <ul className="grid grid-cols-1 sm:grid-cols-3 lg:grid-row-4 gap-4">
+            {listings.map((listing) => (
+              <li
+                key={listing.id}
+                className="border bg-white text-black text-sm border-black rounded-lg p-2"
+              >
+                <h3 className="text-md font-semibold leading-tight truncate">
+                  {listing.name}
+                </h3>
+                <img
+                  src={listing.imageUrl}
+                  alt={listing.name}
+                  className="w-2/3 h-28 my-2 mx-auto"
+                />
+                <p>Category: {listing.category}</p>
+                <p>Subcategory: {listing.subcategory}</p>
+                <p>Price: ${listing.price}</p>
+                <p>Status: {listing.verified ? "Verified" : "Unverified"}</p>
+                <p>
+                  Listing Type:{" "}
+                  {listing.listingType === "sellNow" ? "Sell Now" : "Ask"}
+                </p>{" "}
+                {/* Display Listing Type */}
+                <div className="flex justify-between">
+                  <button
+                    onClick={() => handleUpdate(listing)}
+                    className="text-blue-600 bottom-2 left-2 font-medium "
+                  >
+                    Update
+                  </button>
+                  <button
+                    onClick={() => handleDelete(listing.id)}
+                    className="text-red-600 bottom-2 right-2 font-medium"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+}

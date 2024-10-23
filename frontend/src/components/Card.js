@@ -15,7 +15,7 @@ import {
 } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom"; // Import Link for navigation
+import { Link } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 
 const Card = ({ product, isLoading }) => {
@@ -94,7 +94,6 @@ const Card = ({ product, isLoading }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Wrap this part in a Link to navigate to the product detail page */}
       <Link to={`/product/${product.id}`}>
         <div className="w-full h-36 flex justify-center items-center">
           <img
@@ -110,7 +109,7 @@ const Card = ({ product, isLoading }) => {
         </div>
       </Link>
 
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center mt-2">
         <div>
           <p className="text-gray-400 text-md">Price</p>
           <p className="text-xl font-bold">${product.price}</p>

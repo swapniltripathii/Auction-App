@@ -4,7 +4,7 @@ import { doc, getDoc } from "firebase/firestore";
 import FavouriteCard from "../../components/FavouriteCard"; // Use smaller card component
 import { firestore } from "../../firebase/firebase"; // Import Firestore
 import ProfileLayout from "../../components/ProfileLayouts";
-
+import Footer from "../../components/Footer";
 const Favourite = () => {
   const { currentUser } = useAuth();
   const [favourites, setFavourites] = useState([]);
@@ -47,6 +47,7 @@ const Favourite = () => {
           )}
         </div>
       </ProfileLayout>
+      <Footer />
     </div>
   );
 };

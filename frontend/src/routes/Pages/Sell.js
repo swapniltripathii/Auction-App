@@ -25,43 +25,38 @@ export default function Sell() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const userId = auth.currentUser.uid;
+    const sellerId = auth.currentUser.uid;
 
     // Set expiry date to 30 days from today
     const expiryDate = new Date();
     expiryDate.setDate(expiryDate.getDate() + 30); // Add 30 days
 
+    const productData = {
+      sellerId,
+      name: productName,
+      category,
+      subcategory,
+      price: parseFloat(price),
+      imageUrl,
+      expiryDate: expiryDate.toISOString(),
+      verified: false,
+      isLiked: false,
+    };
+
     if (editingId) {
       // If editing, update the existing product
       const listingRef = doc(db, "products", editingId);
-      await updateDoc(listingRef, {
-        name: productName,
-        category,
-        subcategory,
-        price: parseFloat(price),
-        imageUrl,
-        expiryDate: expiryDate.toISOString(),
-      });
+      await updateDoc(listingRef, productData);
       setEditingId(null); // Reset editing state
     } else {
       // Add a new product
-      await addDoc(collection(db, "products"), {
-        userId,
-        name: productName,
-        category,
-        subcategory,
-        price: parseFloat(price),
-        imageUrl,
-        expiryDate: expiryDate.toISOString(), // Save expiry date
-        verified: false,
-        isLiked: false,
-      });
+      await addDoc(collection(db, "products"), productData);
     }
 
     // Reset form fields
     setProductName("");
     setCategory("sneakers");
-    setSubcategory("");
+    setSubcategory("sneakers");
     setPrice("");
     setImageUrl("");
   };
@@ -69,13 +64,13 @@ export default function Sell() {
   useEffect(() => {
     const productsCollection = collection(db, "products");
     const unsubscribe = onSnapshot(productsCollection, (snapshot) => {
-      const userId = auth.currentUser.uid;
+      const sellerId = auth.currentUser.uid;
       const listingsData = snapshot.docs
         .map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }))
-        .filter((listing) => listing.userId === userId);
+        .filter((listing) => listing.sellerId === sellerId); // Changed userId to sellerId
 
       setListings(listingsData);
     });
@@ -93,7 +88,7 @@ export default function Sell() {
     setImageUrl(listing.imageUrl);
   };
 
-  // deleting the product from current listings & Firestore
+  // Deleting the product from current listings & Firestore
   const handleDelete = async (id) => {
     const listingRef = doc(db, "products", id);
     const listingSnapshot = await getDoc(listingRef);
@@ -110,7 +105,7 @@ export default function Sell() {
 
         const categoryDoc = querySnapshot.docs.find(
           (doc) =>
-            doc.data().userId === listingData.userId &&
+            doc.data().sellerId === listingData.sellerId && // Changed userId to sellerId
             doc.data().name === listingData.name
         );
 
@@ -223,7 +218,6 @@ export default function Sell() {
             </label>
             <select
               id="subcategory"
-              type="text"
               value={subcategory}
               onChange={(e) => setSubcategory(e.target.value)}
               required
@@ -281,7 +275,7 @@ export default function Sell() {
               className="w-1/3 bg-black text-white py-2 rounded-lg"
             >
               {editingId ? "Update Listing" : "Submit Listing"}
-            </button>{" "}
+            </button>
           </div>
         </form>
       </div>
@@ -303,12 +297,14 @@ export default function Sell() {
                 <img
                   src={listing.imageUrl}
                   alt={listing.name}
-                  className="w-1/2 h-28 my-2 mx-auto"
+                  className="w-2/3 h-28 my-2 mx-auto"
                 />
                 <p>Category: {listing.category}</p>
                 <p>Subcategory: {listing.subcategory}</p>
                 <p>Price: ${listing.price}</p>
                 <p>Status: {listing.verified ? "Verified" : "Unverified"}</p>
+
+                {/* Display Listing Type */}
                 <div className="flex justify-between">
                   <button
                     onClick={() => handleUpdate(listing)}

@@ -1,18 +1,26 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { motion } from "framer-motion";
+import logo from "../../assets/images/logowhite.png";
 
 const Help = () => {
   return (
-    <section className="bg-gray-100 py-16 px-6 lg:px-20 text-center">
+    <section className="bg-gray-100 pb-14 text-center">
+      {/* Banner */}
+      <div className="h-24 w-full flex items-center justify-center bg-gray-800 text-white">
+        <img src={logo} alt="Logo" className="h-32" />
+      </div>
       <div className="max-w-5xl mx-auto">
         {/* Heading */}
-        <h2 className="text-4xl font-extrabold text-gray-900 mb-4">
+        <h2 className="text-4xl font-extrabold text-gray-900 mb-4 mt-8">
           Help & Support
         </h2>
 
         {/* Intro */}
         <p className="text-lg text-gray-600 mb-8">
-          Need assistance? You're in the right place. Below you'll find answers to common questions and guides on how to use <span className="font-bold text-indigo-600">BidRare</span> effectively.
+          Need assistance? You're in the right place. Below you'll find answers
+          to common questions and guides on how to use{" "}
+          <span className="font-bold text-indigo-600">BidRare</span>{" "}
+          effectively.
         </p>
 
         {/* FAQ Section */}
@@ -27,7 +35,8 @@ const Help = () => {
               How to create an account?
             </h3>
             <p className="text-gray-600">
-              To start bidding or selling, simply click the "Sign Up" button, fill in your details, and you're good to go!
+              To start bidding or selling, simply click the "Sign Up" button,
+              fill in your details, and you're good to go!
             </p>
           </motion.div>
 
@@ -41,7 +50,9 @@ const Help = () => {
               How do I place a bid?
             </h3>
             <p className="text-gray-600">
-              Browse the item, enter your bid amount in the provided field, and click 'Place Bid'. You'll be notified if you're the highest bidder.
+              Browse the item, enter your bid amount in the provided field, and
+              click 'Place Bid'. You'll be notified if you're the highest
+              bidder.
             </p>
           </motion.div>
 
@@ -55,7 +66,9 @@ const Help = () => {
               How do I list an item for auction?
             </h3>
             <p className="text-gray-600">
-              Go to the 'Sell' section, click 'List New Item', fill in the item details, and set your starting price. Your item will be live for bidding shortly.
+              Go to the 'Sell' section, click 'List New Item', fill in the item
+              details, and set your starting price. Your item will be live for
+              bidding shortly.
             </p>
           </motion.div>
         </div>
@@ -72,7 +85,8 @@ const Help = () => {
               Payment & Security
             </h3>
             <p className="text-gray-600">
-              We ensure secure payments through trusted gateways. Your transactions are encrypted and protected.
+              We ensure secure payments through trusted gateways. Your
+              transactions are encrypted and protected.
             </p>
           </motion.div>
 
@@ -86,7 +100,9 @@ const Help = () => {
               How do I contact support?
             </h3>
             <p className="text-gray-600">
-              If you need further help, reach out to us via our contact form or email us at <span className="font-bold">support@bidrare.com</span>.
+              If you need further help, reach out to us via our contact form or
+              email us at <span className="font-bold">support@bidrare.com</span>
+              .
             </p>
           </motion.div>
         </div>
