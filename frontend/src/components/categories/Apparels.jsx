@@ -3,9 +3,9 @@ import Card from '../Card'; // Import your Card component
 import { collection, getDocs, getFirestore } from 'firebase/firestore'; // Ensure Firestore is imported
 import Loader from '../Loader'; // Import the Loader component
 
-const Apparels = () => {
+const Apparels = ({ limit }) => {
     const [apparelProducts, setApparelProducts] = useState([]);
-    const [Loading, setLoading] = useState(true); // State to track loading
+    const [loading, setLoading] = useState(true); // State to track loading
     const db = getFirestore(); // Get Firestore instance
 
     useEffect(() => {
@@ -26,7 +26,7 @@ const Apparels = () => {
     }, [db]);
 
     // Render loader if loading is still true
-    if (Loading) {
+    if (loading) {
         return <Loader />; // Show the loader without wrapping it in a div
     }
 
@@ -39,11 +39,14 @@ const Apparels = () => {
         );
     }
 
+    // If limit is provided, slice the apparelProducts array to limit the displayed products
+    const displayedProducts = limit ? apparelProducts.slice(0, limit * 6) : apparelProducts;
+
     // Render products once loaded
     return (
         <div className="product-container p-4">
             <div className="grid sm:grid-cols-6 gap-6">
-                {apparelProducts.map((product) => (
+                {displayedProducts.map((product) => (
                     <Card key={product.id} product={product} />
                 ))}
             </div>
