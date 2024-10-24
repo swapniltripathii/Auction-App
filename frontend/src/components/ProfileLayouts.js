@@ -53,7 +53,7 @@ const ProfileLayout = ({ children }) => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full ">
       <div className="w-full h-32">
         <NavbarTop />
       </div>
@@ -62,7 +62,7 @@ const ProfileLayout = ({ children }) => {
           <div className="text-black font-normal text-xl md:text-2xl mt-4 ml-3">
             {userData.displayName}
           </div>
-          <div className="flex flex-col items-start pt-6 bg-gray-100">
+          <div className="flex flex-col items-start pt-6 bg-gray-100 overflow-auto">
             <Link
               to="/profile"
               className={`flex items-center space-x-4 p-4 w-full rounded-md ${
@@ -157,7 +157,7 @@ const ProfileLayout = ({ children }) => {
               <>
                 <Link
                   to="/admin"
-                  className={`flex items-center space-x-4 p-4 w-full rounded-md ${
+                  className={`flex items-center space-x-4 p-4 w-full overflow-auto rounded-md ${
                     isActive("/admin") ? "bg-white" : "hover:bg-white"
                   }`}
                 >

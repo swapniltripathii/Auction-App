@@ -138,9 +138,9 @@ const Buying = () => {
   };
 
   return (
-    <div className="overflow-x-auto h-full w-full bg-white">
+    <div className="overflow h-full w-full bg-white">
       <ProfileLayout>
-        <div className="p-4 md:p-6 bg-white">
+        <div className="p-6 bg-white">
           <div className="flex flex-col md:flex-row md:space-x-6 mb-6">
             <button
               className={`px-4 text-lg font-semibold py-2 ${
@@ -170,7 +170,7 @@ const Buying = () => {
 
           {filteredTab === "bids" && (
             <div className="overflow-x-auto">
-              <table className="table-auto w-full text-left text-sm md:text-base">
+              <table className="table-auto w-full text-left">
                 <thead>
                   <tr>
                     <th className="px-2 py-2">Item</th>
@@ -195,23 +195,23 @@ const Buying = () => {
                           <img
                             src={bid.productImage}
                             alt={bid.productName}
-                            className="w-12 h-12 md:w-14 md:h-14 object-cover mr-4"
+                            className="w-14 h-14 object-cover mr-4"
                           />
                           {bid.productName.length > 20
                             ? `${bid.productName.slice(0, 20)}...`
                             : bid.productName}
                         </td>
-                        <td className="border px-2 py-1">
+                        <td className="border px-4 py-2">
                           ${bid.yourBidPrice}
                         </td>
-                        <td className="border px-2 py-1">
+                        <td className="border px-4 py-2">
                           ${highestBids[bid.productId] || "Loading..."}
                         </td>
-                        <td className="border px-2 py-1">${bid.price}</td>
-                        <td className="border px-2 py-1">
+                        <td className="border px-4 py-2">${bid.price}</td>
+                        <td className="border px-4 py-2">
                           {calculateRemainingDays(bid.expiryDate)}
                         </td>
-                        <td className="border px-2 py-1">
+                        <td className="border px-4 py-2">
                           <button
                             onClick={() => handleDeleteBid(bid.id)}
                             className="text-red-600"
@@ -229,7 +229,7 @@ const Buying = () => {
 
           {filteredTab === "orders" && (
             <div className="overflow-x-auto">
-              <table className="table-auto w-full text-left text-sm md:text-base">
+              <table className="table-auto w-full text-left">
                 <thead>
                   <tr>
                     <th className="px-2 py-2">Item</th>
@@ -251,20 +251,22 @@ const Buying = () => {
                       <tr key={order.id}>
                         <td className="border px-2 py-1 flex items-center">
                           <img
-                            src={order.productImage}
-                            alt={order.productName}
-                            className="w-12 h-12 md:w-14 md:h-14 object-cover mr-4"
+                            src={order.imageUrl}
+                            alt={order.name}
+                            className="w-14 h-14 object-cover mr-4"
                           />
-                          {order.productName.length > 20
-                            ? `${order.productName.slice(0, 20)}...`
-                            : order.productName}
+                          {order.name.length > 20
+                            ? `${order.name.slice(0, 20)}...`
+                            : order.name}
                         </td>
-                        <td className="border px-2 py-1">
-                          {formatDate(order.purchaseDate)}
+                        <td className="border px-4 py-2">
+                          {formatDate(order.saleDate)}
                         </td>
-                        <td className="border px-2 py-1">{order.id}</td>
-                        <td className="border px-2 py-1">${order.price}</td>
-                        <td className="border px-2 py-1">{order.status}</td>
+                        <td className="border px-4 py-2">{order.orderId}</td>
+                        <td className="border px-4 py-2">
+                          ${order.highestBid}
+                        </td>
+                        <td className="border px-4 py-2">{order.status}</td>
                       </tr>
                     ))
                   )}
@@ -275,11 +277,11 @@ const Buying = () => {
 
           {filteredTab === "history" && (
             <div className="overflow-x-auto">
-              <table className="table-auto w-full text-left text-sm md:text-base">
+              <table className="table-auto w-full text-left">
                 <thead>
                   <tr>
                     <th className="px-2 py-2">Item</th>
-                    <th className="px-2 py-2">Purchase Date</th>
+                    <th className="px-2 py-2">Delivery Date</th>
                     <th className="px-2 py-2">Order No</th>
                     <th className="px-2 py-2">Price</th>
                   </tr>
@@ -288,7 +290,7 @@ const Buying = () => {
                   {history.length === 0 ? (
                     <tr>
                       <td colSpan="4" className="text-center py-4">
-                        No purchase history available.
+                        No order history available.
                       </td>
                     </tr>
                   ) : (
@@ -296,19 +298,19 @@ const Buying = () => {
                       <tr key={order.id}>
                         <td className="border px-2 py-1 flex items-center">
                           <img
-                            src={order.productImage}
-                            alt={order.productName}
-                            className="w-12 h-12 md:w-14 md:h-14 object-cover mr-4"
+                            src={order.imageUrl}
+                            alt={order.name}
+                            className="w-14 h-14 object-cover mr-4"
                           />
-                          {order.productName.length > 20
-                            ? `${order.productName.slice(0, 20)}...`
-                            : order.productName}
+                          {order.name.length > 20
+                            ? `${order.name.slice(0, 20)}...`
+                            : order.name}
                         </td>
-                        <td className="border px-2 py-1">
-                          {formatDate(order.purchaseDate)}
+                        <td className="border px-4 py-2">
+                          {order.deliveryDate}
                         </td>
-                        <td className="border px-2 py-1">{order.id}</td>
-                        <td className="border px-2 py-1">${order.price}</td>
+                        <td className="border px-4 py-2">{order.orderNo}</td>
+                        <td className="border px-4 py-2">${order.total}</td>
                       </tr>
                     ))
                   )}

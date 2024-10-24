@@ -169,18 +169,32 @@ const Selling = () => {
       );
       await addDoc(bidderOrdersCollection, { ...newOrder, status: "Pending" });
 
-      // Update local state
+      // Delete product from 'products' collection
+      await deleteDoc(productRef);
+
+      // Delete product from its specific category collection
+      const category = productData.category; // Assuming category is stored in product data
+      const categoryCollectionRef = collection(db, category);
+      const querySnapshot = await getDocs(categoryCollectionRef);
+
+      const categoryDoc = querySnapshot.docs.find(
+        (doc) =>
+          doc.data().sellerId === productData.sellerId &&
+          doc.data().name === productData.name
+      );
+
+      if (categoryDoc) {
+        await deleteDoc(doc(db, category, categoryDoc.id));
+      }
+
+      // Update local state by removing the sold product
       setListings((prevListings) =>
-        prevListings.map((product) =>
-          product.id === id ? { ...product, isSold: true, orderId } : product
-        )
+        prevListings.filter((listing) => listing.id !== id)
       );
+
+      console.log("Product successfully sold and removed from collections.");
     } catch (error) {
-      console.error(
-        "Error updating product and bids:",
-        error.message,
-        error.code
-      );
+      console.error("Error selling and deleting product:", error);
     }
   };
 
@@ -189,7 +203,9 @@ const Selling = () => {
   };
 
   // Products displayed in the current tab are not sold yet (isSold: false)
-  const currentListings = listings.filter((listing) => !listing.isSold);
+  const currentListings = listings.filter(
+    (listing) => !listing.isSold && listing.verified
+  );
 
   // Products displayed in the pending tab are sold but not delivered yet (isSold: true, isDelivered: false)
   const pendingListings = orders.filter((order) => !order.isDelivered);
