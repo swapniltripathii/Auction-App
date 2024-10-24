@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Card from "../Card"; // Import your Card component
-import { collection, getDocs, getFirestore } from "firebase/firestore"; // Ensure Firestore is imported
+import { collection, getDocs, getFirestore } from "firebase/firestore"; // Import necessary Firestore functions
 import Loader from "../Loader"; // Import the Loader component
 
-const Electron = () => {
+const Electron = ({ limit }) => {
   const [electronicsProducts, setElectronicsProducts] = useState([]);
-  const [Loading, setLoading] = useState(true); // State to track loading
+  const [loading, setLoading] = useState(true); // State to track loading
   const db = getFirestore(); // Get Firestore instance
 
   useEffect(() => {
@@ -29,11 +29,11 @@ const Electron = () => {
   }, [db]);
 
   // Render loader if loading is still true
-  if (Loading) {
+  if (loading) {
     return <Loader />; // Show the loader without wrapping it in a div
   }
 
-  // Render "No Apparels Left" message if no products are found after loading
+  // Render "No Electronics Left" message if no products are found after loading
   if (electronicsProducts.length === 0) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -47,11 +47,16 @@ const Electron = () => {
     );
   }
 
+  // If limit is provided, slice the electronicsProducts array to limit the displayed products
+  const displayedProducts = limit
+    ? electronicsProducts.slice(0, limit * 6)
+    : electronicsProducts;
+
   // Render products once loaded
   return (
     <div className="product-container p-4">
       <div className="grid sm:grid-cols-6 gap-6">
-        {electronicsProducts.map((product) => (
+        {displayedProducts.map((product) => (
           <Card key={product.id} product={product} />
         ))}
       </div>

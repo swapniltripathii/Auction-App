@@ -107,14 +107,7 @@ function App() {
                 </PrivateRoute>
               }
             />
-            {/* <Route
-              path="/buy/:productId"
-              element={
-                <PrivateRoute>
-                  <BuyNow />
-                </PrivateRoute>
-              }
-            /> */}
+            
             <Route
               path="/bid/:productId"
               element={

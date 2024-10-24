@@ -3,9 +3,9 @@ import Card from "../Card"; // Import your Card component
 import { collection, getDocs, getFirestore } from "firebase/firestore"; // Ensure Firestore is imported
 import Loader from "../Loader"; // Import the Loader component
 
-const Accessory = () => {
+const Accessory = ({ limit }) => {
   const [accessoriesProducts, setAccessoriesProducts] = useState([]);
-  const [Loading, setLoading] = useState(true); // State to track loading
+  const [loading, setLoading] = useState(true); // State to track loading
   const db = getFirestore(); // Get Firestore instance
 
   useEffect(() => {
@@ -29,11 +29,11 @@ const Accessory = () => {
   }, [db]);
 
   // Render loader if loading is still true
-  if (Loading) {
+  if (loading) {
     return <Loader />; // Show the loader without wrapping it in a div
   }
 
-  // Render "No Apparels Left" message if no products are found after loading
+  // Render "No Accessories Left" message if no products are found after loading
   if (accessoriesProducts.length === 0) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -47,11 +47,16 @@ const Accessory = () => {
     );
   }
 
+  // If limit is provided, slice the accessoriesProducts array to limit the displayed products
+  const displayedProducts = limit
+    ? accessoriesProducts.slice(0, limit * 6)
+    : accessoriesProducts;
+
   // Render products once loaded
   return (
     <div className="product-container p-4">
       <div className="grid sm:grid-cols-6 gap-6">
-        {accessoriesProducts.map((product) => (
+        {displayedProducts.map((product) => (
           <Card key={product.id} product={product} />
         ))}
       </div>
