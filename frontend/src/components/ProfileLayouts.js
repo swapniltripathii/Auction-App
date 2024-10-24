@@ -13,7 +13,6 @@ import {
   FaTools,
 } from "react-icons/fa";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
-import Loader from "./Loader";
 
 const ProfileLayout = ({ children }) => {
   const { currentUser } = useAuth();
@@ -23,7 +22,6 @@ const ProfileLayout = ({ children }) => {
     uid: "",
   });
   const [isAdmin, setIsAdmin] = useState(false);
-  const [loading, setLoading] = useState(true); // Add loading state
   const location = useLocation();
   const db = getFirestore();
 
@@ -45,30 +43,17 @@ const ProfileLayout = ({ children }) => {
           }
         } catch (error) {
           console.error("Error fetching user role:", error);
-        } finally {
-          setLoading(false); // Set loading to false once data is fetched
         }
       };
 
       fetchUserRole();
-    } else {
-      setLoading(false); // Handle case when there's no current user
     }
   }, [currentUser, db]);
 
   const isActive = (path) => location.pathname === path;
 
-  // Show loader while data is loading
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Loader />
-      </div>
-    );
-  }
-
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full ">
       <div className="w-full h-32">
         <NavbarTop />
       </div>
