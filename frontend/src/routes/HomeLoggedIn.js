@@ -11,8 +11,8 @@ import Footer from "../components/Footer";
 import Accessory from "../components/categories/Accessory";
 import Electron from "../components/categories/Electron";
 import { Link } from "react-router-dom"; // Import Link for navigation
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons'; // Import the right arrow icon
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons"; // Import the right arrow icon
 
 const HomeLoggedIn = () => {
   const { currentUser } = useAuth();
@@ -35,17 +35,23 @@ const HomeLoggedIn = () => {
           {/* Apparels Section */}
           <div className="flex justify-between items-center pt-1 pl-4">
             <div className="text-2xl font-semibold">Apparels</div>
-            <Link to="/apparels" className="flex items-center text-blue-500 hover:text-blue-700">
+            <Link
+              to="/apparels"
+              className="flex items-center text-blue-500 hover:text-blue-700"
+            >
               See More
               <FontAwesomeIcon icon={faArrowRight} className="w-4 h-4 ml-1" />
             </Link>
           </div>
           <Apparels limit={2} />
-
+          <SliderCard />
           {/* Sneakers Section */}
           <div className="flex justify-between items-center pt-1 pl-4">
             <div className="text-2xl font-semibold">Sneakers</div>
-            <Link to="/sneakers" className="flex items-center text-blue-500 hover:text-blue-700">
+            <Link
+              to="/sneakers"
+              className="flex items-center text-blue-500 hover:text-blue-700"
+            >
               See More
               <FontAwesomeIcon icon={faArrowRight} className="w-4 h-4 ml-1" />
             </Link>
@@ -55,7 +61,10 @@ const HomeLoggedIn = () => {
           {/* Accessories Section */}
           <div className="flex justify-between items-center pt-1 pl-4">
             <div className="text-2xl font-semibold">Accessories</div>
-            <Link to="/accessories" className="flex items-center text-blue-500 hover:text-blue-700">
+            <Link
+              to="/accessories"
+              className="flex items-center text-blue-500 hover:text-blue-700"
+            >
               See More
               <FontAwesomeIcon icon={faArrowRight} className="w-4 h-4 ml-1" />
             </Link>
@@ -79,7 +88,10 @@ const HomeLoggedIn = () => {
           {/* Collectibles Section */}
           <div className="flex justify-between items-center pt-1 pl-4">
             <div className="text-2xl font-semibold">Collectibles</div>
-            <Link to="/collectibles" className="flex items-center text-blue-500 hover:text-blue-700">
+            <Link
+              to="/collectibles"
+              className="flex items-center text-blue-500 hover:text-blue-700"
+            >
               See More
               <FontAwesomeIcon icon={faArrowRight} className="w-4 h-5 ml-1" />
             </Link>
@@ -89,7 +101,10 @@ const HomeLoggedIn = () => {
           {/* Electronics Section */}
           <div className="flex justify-between items-center pt-1 pl-4">
             <div className="text-2xl font-semibold">Electronics</div>
-            <Link to="/electronics" className="flex items-center  text-blue-500 hover:text-blue-700">
+            <Link
+              to="/electronics"
+              className="flex items-center  text-blue-500 hover:text-blue-700"
+            >
               See More
               <FontAwesomeIcon icon={faArrowRight} className="w-4 h-4 ml-1" />
             </Link>
